@@ -1,0 +1,18 @@
+{
+  "name": "iot-management-hub",
+  "version": "0.0.1",
+  "description": "Backend system acting as central hub for managing IoT devices in a smart home environment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "IoT",
+    "SmartHome",
+    "Hub",
+    "Manager",
+    "Backend"
+  ],
+  "author": "Kevin Benard",
+  "license": "ISC"
+}

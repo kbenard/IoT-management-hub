@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+const config = require('config');
+console.log("Config: ", config);
+
 @Injectable()
 export class DeviceService {
   /*    GET SERVICES    */

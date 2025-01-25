@@ -1,7 +1,11 @@
-# compiled output
+# Compiled Output
 /dist
 /node_modules
 /build
+
+# Configs
+config/dev.json
+config/prod.json
 
 # Logs
 logs

@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class DeviceService {
   /*    GET SERVICES    */
-  getDevice(id: string): string {
-    return `getDevice - ${id}`;
+  getDevice(deviceId: string): string {
+    return `getDevice - ${deviceId}`;
   }
 
   listDevices(homeId?: string): string {
@@ -12,17 +12,17 @@ export class DeviceService {
   }
 
   /*    PUT/PATCH SERVICES    */
-  updateDevice(id: string): string {
-    return `updateDevice - ${id}`;
+  updateDevice(deviceId: string): string {
+    return `updateDevice - ${deviceId}`;
   }
 
   /*    POST SERVICES    */
-  registerDevice(id: string): string {
-    return `registerDevice - ${id}`;
+  registerDevice(deviceId: string): string {
+    return `registerDevice - ${deviceId}`;
   }
 
   /*    DELETE SERVICES    */
-  removeDevice(id: string): string {
-    return `removeDevice - ${id}`;
+  removeDevice(deviceId: string): string {
+    return `removeDevice - ${deviceId}`;
   }
 }

@@ -7,36 +7,40 @@ import { DeviceService } from './device.service';
 
 @Controller('device')
 export class DeviceController {
-  constructor(private readonly iotDeviceService: DeviceService) {}
+  constructor(private readonly deviceService: DeviceService) {}
 
   /*    GET OPERATIONS    */
-  @Get(':id')
-  getDevice(@Param('id') id: string): string {
-    return this.iotDeviceService.getDevice(id);
+  @Get('id/:deviceId')
+  getDevice(@Param('deviceId') deviceId: string): string {
+    console.log(`device - getDevice - ${deviceId}`);
+    return this.deviceService.getDevice(deviceId);
   }
 
-  @Get('list/:homeId')
+  @Get('list/homeId{/:homeId}')
   listDevices(@Param('homeId') homeId?: string): string {
-    console.log("")
-    return this.iotDeviceService.listDevices(homeId);
+    console.log(`device - listDevices - ${homeId}`);
+    return this.deviceService.listDevices(homeId);
   }
 
   /*    PUT OPERATIONS    */
-  @Put(':id')
-  @Patch(':id')
-  updateDevice(@Param('id') id: string): string {
-    return this.iotDeviceService.updateDevice(id);
+  @Put('id/:deviceId')
+  @Patch('id/:deviceId')
+  updateDevice(@Param('deviceId') deviceId: string): string {
+    console.log(`device - updateDevice - ${deviceId}`);
+    return this.deviceService.updateDevice(deviceId);
   }
   
   /*    POST OPERATIONS    */
-  @Post(':id')
-  registerDevice(@Param('id') id: string): string {
-    return this.iotDeviceService.registerDevice(id);
+  @Post('id/:deviceId')
+  registerDevice(@Param('deviceId') deviceId: string): string {
+    console.log(`device - registerDevice - ${deviceId}`);
+    return this.deviceService.registerDevice(deviceId);
   }
 
   /*    DELETE OPERATIONS    */
-  @Delete(':id')
-  removeDevice(@Param('id') id: string): string {
-    return this.iotDeviceService.removeDevice(id);
+  @Delete('id/:deviceId')
+  removeDevice(@Param('deviceId') deviceId: string): string {
+    console.log(`device - deleteDevice - ${deviceId}`);
+    return this.deviceService.removeDevice(deviceId);
   }
 }

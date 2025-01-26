@@ -1,10 +1,23 @@
 import {
-    IsNotEmpty,
-    IsString,
-  } from 'class-validator';
-  
-  export class DeviceDto {
-    @IsNotEmpty()
-    @IsString()
-    _id: string;
-  }
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsInt,
+  IsArray,
+  IsBoolean,
+  IsEAN,
+  IsIP,
+  isSemVer
+} from 'class-validator';
+
+// TODO: Refine 
+
+export class DeviceDto {
+  @IsNotEmpty()
+  @IsString()
+  deviceId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  type: string;
+}

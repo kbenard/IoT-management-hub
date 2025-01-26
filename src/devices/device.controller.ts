@@ -1,5 +1,6 @@
-import { Controller, Param, Get, Put, Patch, Post, Delete } from '@nestjs/common';
+import { Controller, Param, Body, Get, Put, Patch, Post, Delete } from '@nestjs/common';
 import { DeviceService } from './device.service';
+import { DeviceDto } from './device.dto';
 
 // This controller handles incoming requests related to IoT device operations within the iot-management-hub service
 // Every request path need to be prefixed with /device
@@ -11,6 +12,7 @@ export class DeviceController {
 
   /*    GET OPERATIONS    */
   @Get('id/:deviceId')
+  // Retrieves all device information, based on deviceId
   async getDevice(@Param('deviceId') deviceId: string) {
     console.log(`device - getDevice - ${deviceId}`);
     let device;
@@ -24,6 +26,8 @@ export class DeviceController {
     }
   }
 
+  // Retrieves a details summary from a list of devices
+  // Can be narrowed down to device belonging to a specific homeId, if not, retrieve for all devices
   @Get('list{/homeId/:homeId}')
   async listDevices(@Param('homeId') homeId?: string) {
     console.log(`device - listDevices - ${homeId}`);
@@ -34,22 +38,25 @@ export class DeviceController {
   /*    PUT OPERATIONS    */
   @Put('id/:deviceId')
   @Patch('id/:deviceId')
-  updateDevice(@Param('deviceId') deviceId: string): string {
+  async updateDevice(@Param('deviceId') deviceId: string) {
     console.log(`device - updateDevice - ${deviceId}`);
-    return this.deviceService.update(deviceId);
+    let updatedDevice = await this.deviceService.update(deviceId)
+    return updatedDevice;
   }
   
   /*    POST OPERATIONS    */
   @Post('id/:deviceId')
-  registerDevice(@Param('deviceId') deviceId: string): string {
+  async registerDevice(@Param('deviceId') deviceId: string, @Body() deviceDto: DeviceDto ) {
     console.log(`device - registerDevice - ${deviceId}`);
-    return this.deviceService.create(deviceId);
+    let results = await this.deviceService.create(deviceDto);
+    return results;
   }
 
   /*    DELETE OPERATIONS    */
   @Delete('id/:deviceId')
-  removeDevice(@Param('deviceId') deviceId: string): string {
+  async removeDevice(@Param('deviceId') deviceId: string) {
     console.log(`device - deleteDevice - ${deviceId}`);
-    return this.deviceService.delete(deviceId);
+    let results = await this.deviceService.delete(deviceId)
+    return results;
   }
 }

@@ -1,5 +1,5 @@
 // Nest.js
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 // MongoDB
 import { Model, Connection } from 'mongoose';
@@ -31,7 +31,7 @@ export class DeviceService {
 
   // Retrieves list of summarized device documents
   // When a homeId is supplied, the query narrows the search down to the supplied id, otherwise all documents are retrieved
-  // Implement pagination
+  // TODO: Implement pagination
   async findAll(homeId?: string): Promise<string> {
     console.log('device.service - findAll', homeId || "All")
     let devices
@@ -49,19 +49,44 @@ export class DeviceService {
   // Updates an existing device document with the supplied information
   // Fails if document does not exists?
   // Merge or Replace?
-  update(deviceId: string): string {
+  async update(deviceId: string): Promise<string> {
     console.log('device.service - updateDevice', deviceId)
+    const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
+
+    if (!device) {
+      throw new HttpException('Incorrect deviceId', HttpStatus.BAD_REQUEST);
+    }
+
+    const updatedDevice = {};
+    let results = await this.deviceModel.updateOne({ deviceId: deviceId }, updatedDevice);
+    console.log("Results: ", results)
     return `updateDevice - ${deviceId}`;
   }
 
   /*    POST SERVICES    */
-  
-  create(deviceId: string): string {
-    return `registerDevice - ${deviceId}`;
+  // Registers a device in the database, creates an associated document
+  // Fails if deviceId is already registered
+  async create(deviceData: DeviceDto): Promise<Device> {
+    if(!deviceData.deviceId) {
+      throw new HttpException('Incorrect deviceId', HttpStatus.BAD_REQUEST);
+    }
+
+    const isPresent = await this.deviceModel.countDocuments({ deviceId: deviceData.deviceId });
+    const newDevice = new this.deviceModel(deviceData);
+    let results = await newDevice.save();
+    return results;
   }
 
   /*    DELETE SERVICES    */
-  delete(deviceId: string | string[]): string {
+  // Removes a specific device from the 
+  async delete(deviceId: string | string[]): Promise<string> {
+    const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
+
+    if (!device) {
+      throw new HttpException('Incorrect deviceId', HttpStatus.BAD_REQUEST);
+    }
+
+    let results = await this.deviceModel.deleteOne({ deviceId: deviceId });
     return `removeDevice - ${deviceId}`;
   }
 }

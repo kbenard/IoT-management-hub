@@ -1,5 +1,6 @@
 import { Controller, Param, Body, Get, Put, Patch, Post, Delete } from '@nestjs/common';
 import { DeviceService } from './device.service';
+import { Device } from './device.schema';
 import { DeviceDto } from './device.dto';
 
 // This controller handles incoming requests related to IoT device operations within the iot-management-hub service
@@ -13,17 +14,10 @@ export class DeviceController {
   /*    GET OPERATIONS    */
   @Get('id/:deviceId')
   // Retrieves all device information, based on deviceId
-  async getDevice(@Param('deviceId') deviceId: string) {
+  async getDevice(@Param('deviceId') deviceId: string): Promise<Device> {
     console.log(`device - getDevice - ${deviceId}`);
-    let device;
-    
-    try {
-      device = await this.deviceService.findOne(deviceId);
-      return device
-    } catch (e) {
-
-      return e
-    }
+    let device = await this.deviceService.findOne(deviceId);
+    return device
   }
 
   // Retrieves a details summary from a list of devices
@@ -38,17 +32,17 @@ export class DeviceController {
   /*    PUT OPERATIONS    */
   @Put('id/:deviceId')
   @Patch('id/:deviceId')
-  async updateDevice(@Param('deviceId') deviceId: string) {
+  async updateDevice(@Param('deviceId') deviceId: string, @Body() device: DeviceDto) {
     console.log(`device - updateDevice - ${deviceId}`);
-    let updatedDevice = await this.deviceService.update(deviceId)
+    let updatedDevice = await this.deviceService.update(deviceId, device)
     return updatedDevice;
   }
   
   /*    POST OPERATIONS    */
   @Post('id/:deviceId')
-  async registerDevice(@Param('deviceId') deviceId: string, @Body() deviceDto: DeviceDto ) {
+  async registerDevice(@Param('deviceId') deviceId: string, @Body() device: DeviceDto) {
     console.log(`device - registerDevice - ${deviceId}`);
-    let results = await this.deviceService.create(deviceDto);
+    let results = await this.deviceService.create(device);
     return results;
   }
 

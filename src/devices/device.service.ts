@@ -2,7 +2,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 // MongoDB
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, Document } from 'mongoose';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 
 // Device data models
@@ -22,63 +22,95 @@ export class DeviceService {
 
   /*    GET SERVICES    */
   // Retrieves whole document on one specific device based on supplied deviceId
-  async findOne(deviceId: string): Promise<string> {
+  async findOne(deviceId: string): Promise<Device> { // Need to fix return type
     console.log('device.service - getDevice', deviceId)
-    let device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
-    console.log("device: ", deviceId, JSON.stringify(device, null, 2))
-    return "test";
+    let device = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
+
+    console.log("device: ", device?.deviceId);
+
+    if(!device || !('deviceId' in device)) {
+      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database`, HttpStatus.BAD_REQUEST);
+    }
+
+    return device;
   }
 
   // Retrieves list of summarized device documents
   // When a homeId is supplied, the query narrows the search down to the supplied id, otherwise all documents are retrieved
   // TODO: Implement pagination
-  async findAll(homeId?: string): Promise<string> {
+  async findAll(homeId?: string): Promise<Device[]> {
     console.log('device.service - findAll', homeId || "All")
     let devices
     let query = homeId ? { 'geodata.homeId': homeId } : {};
     if(homeId) {
       devices = await this.deviceModel.find(query).exec();
     } else {
-      devices = await this.deviceModel.find(query );
+      devices = await this.deviceModel.find(query);
     }
-    console.log("Devices", homeId, query, devices);
-    return `listDevices - ${homeId || 'all'}`;
+    console.log("Devices", homeId, query, devices?.length, devices);
+
+    return devices;
   }
 
   /*    PUT/PATCH SERVICES    */
   // Updates an existing device document with the supplied information
   // Fails if document does not exists?
   // Merge or Replace?
-  async update(deviceId: string): Promise<string> {
+  async update(deviceId: string, updateDevice: DeviceDto): Promise<any> {
     console.log('device.service - updateDevice', deviceId)
     const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
 
     if (!device) {
-      throw new HttpException('Incorrect deviceId', HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database`, HttpStatus.BAD_REQUEST);
     }
 
-    const updatedDevice = {};
-    let results = await this.deviceModel.updateOne({ deviceId: deviceId }, updatedDevice);
-    console.log("Results: ", results)
-    return `updateDevice - ${deviceId}`;
+    const res = await this.deviceModel.updateOne({ deviceId: deviceId }, updateDevice);
+    
+    console.log("Update Result: ", res)
+    if(!res.acknowledged) {
+      throw new HttpException(`Database Error: Update success for document with deviceId '${deviceId}' was not acknowledged by the database`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    if(res.matchedCount === 0) {
+      throw new HttpException(`Database Error: No document with deviceId '${deviceId}' was matched in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    if(res.matchedCount > 1) {
+      throw new HttpException(`Database Error: Too many documents with deviceId '${deviceId}' were matched in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    if(res.upsertedCount === 0) {
+      throw new HttpException(`Database Error: No document with deviceId '${deviceId}' was upserted in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    return {
+       success: res.acknowledged,
+       deviceId: deviceId
+    };
   }
 
   /*    POST SERVICES    */
   // Registers a device in the database, creates an associated document
-  // Fails if deviceId is already registered
+  // Fails if deviceId is already registered or not provided
   async create(deviceData: DeviceDto): Promise<Device> {
     if(!deviceData.deviceId) {
-      throw new HttpException('Incorrect deviceId', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Mandatory deviceId is missing from device registration request', HttpStatus.BAD_REQUEST);
     }
 
+    // Checks if provided deviceId is already present in the database, throws error if so
     const isPresent = await this.deviceModel.countDocuments({ deviceId: deviceData.deviceId });
+    if(isPresent) {
+      throw new HttpException(`Document with deviceId '${deviceData.deviceId}' is already present in the database. Please review the device data or use the appropriate API call.`, HttpStatus.BAD_REQUEST);
+    }
+
+    // Inserts a new device document in the database to register the device
     const newDevice = new this.deviceModel(deviceData);
-    let results = await newDevice.save();
-    return results;
+    let result = await newDevice.save();
+    return result;
   }
 
   /*    DELETE SERVICES    */
-  // Removes a specific device from the 
+  // Removes a specific device from the database, fails if deviceId not found
   async delete(deviceId: string | string[]): Promise<string> {
     const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
 

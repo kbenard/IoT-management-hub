@@ -1,4 +1,3 @@
-// global Device
 import { Controller, Param, Get, Put, Patch, Post, Delete } from '@nestjs/common';
 import { DeviceService } from './device.service';
 
@@ -25,10 +24,11 @@ export class DeviceController {
     }
   }
 
-  @Get('list/homeId{/:homeId}')
-  listDevices(@Param('homeId') homeId?: string): string {
+  @Get('list{/homeId/:homeId}')
+  async listDevices(@Param('homeId') homeId?: string) {
     console.log(`device - listDevices - ${homeId}`);
-    return this.deviceService.listDevices(homeId);
+    let devices = await this.deviceService.findAll(homeId)
+    return devices;
   }
 
   /*    PUT OPERATIONS    */
@@ -36,20 +36,20 @@ export class DeviceController {
   @Patch('id/:deviceId')
   updateDevice(@Param('deviceId') deviceId: string): string {
     console.log(`device - updateDevice - ${deviceId}`);
-    return this.deviceService.updateDevice(deviceId);
+    return this.deviceService.update(deviceId);
   }
   
   /*    POST OPERATIONS    */
   @Post('id/:deviceId')
   registerDevice(@Param('deviceId') deviceId: string): string {
     console.log(`device - registerDevice - ${deviceId}`);
-    return this.deviceService.registerDevice(deviceId);
+    return this.deviceService.create(deviceId);
   }
 
   /*    DELETE OPERATIONS    */
   @Delete('id/:deviceId')
   removeDevice(@Param('deviceId') deviceId: string): string {
     console.log(`device - deleteDevice - ${deviceId}`);
-    return this.deviceService.removeDevice(deviceId);
+    return this.deviceService.delete(deviceId);
   }
 }

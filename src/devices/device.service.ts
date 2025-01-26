@@ -1,45 +1,67 @@
-import { Model, Connection } from 'mongoose';
+// Nest.js
 import { Injectable } from '@nestjs/common';
+
+// MongoDB
+import { Model, Connection } from 'mongoose';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+
+// Device data models
 import { Device } from './device.schema';
 import { DeviceDto } from './device.dto';
 
+// App Global Config
 const config = require('config');
 
 @Injectable()
 export class DeviceService {
+  // Injecting Mongoose's Device Model in the constructor for interactions with the Devices collection in the MongoDB database
   constructor(
-    @InjectConnection() private connection: Connection,
+    //@InjectConnection() private connection: Connection, // When needed for connection config checks
     @InjectModel('Device') private deviceModel: Model<Device>
   ) {}
+
   /*    GET SERVICES    */
+  // Retrieves whole document on one specific device based on supplied deviceId
   async findOne(deviceId: string): Promise<string> {
     console.log('device.service - getDevice', deviceId)
-    // console.log("Connection:", this.connection)
-    console.log("Test")
-    let obj1 = await this.deviceModel.findOne({ deviceId: deviceId}).exec();
-    console.log("Obj1", JSON.stringify(obj1, null, 2))
+    let device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
+    console.log("device: ", deviceId, JSON.stringify(device, null, 2))
     return "test";
   }
 
-  listDevices(homeId?: string): string {
-    // let all = await this.deviceModel.find()
-    // console.log("All", all)
+  // Retrieves list of summarized device documents
+  // When a homeId is supplied, the query narrows the search down to the supplied id, otherwise all documents are retrieved
+  // Implement pagination
+  async findAll(homeId?: string): Promise<string> {
+    console.log('device.service - findAll', homeId || "All")
+    let devices
+    let query = homeId ? { 'geodata.homeId': homeId } : {};
+    if(homeId) {
+      devices = await this.deviceModel.find(query).exec();
+    } else {
+      devices = await this.deviceModel.find(query );
+    }
+    console.log("Devices", homeId, query, devices);
     return `listDevices - ${homeId || 'all'}`;
   }
 
   /*    PUT/PATCH SERVICES    */
-  updateDevice(deviceId: string): string {
+  // Updates an existing device document with the supplied information
+  // Fails if document does not exists?
+  // Merge or Replace?
+  update(deviceId: string): string {
+    console.log('device.service - updateDevice', deviceId)
     return `updateDevice - ${deviceId}`;
   }
 
   /*    POST SERVICES    */
-  registerDevice(deviceId: string): string {
+  
+  create(deviceId: string): string {
     return `registerDevice - ${deviceId}`;
   }
 
   /*    DELETE SERVICES    */
-  removeDevice(deviceId: string): string {
+  delete(deviceId: string | string[]): string {
     return `removeDevice - ${deviceId}`;
   }
 }

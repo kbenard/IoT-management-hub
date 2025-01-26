@@ -1,0 +1,62 @@
+{
+    "deviceId": "device2",
+    "type": "EnvironmentalSensor",
+    "status": {
+        "code": "WARNING_MOULD",
+        "lastUpdateReceived": "1737844444",
+        "message": "Action Required: High Mould Levels Detected",
+        "power": {
+            "network": {
+                "required": true,
+                "connected": true
+            },
+            "battery": {
+                "percentage": 100
+            }
+        }
+    },
+    "device": {
+        "model": "Ei1025",
+        "name": "Ei1025 Environmental Sensor",
+        "manufacturer": "Aico",
+        "ean": 5099383010572,
+        "firmware": {
+            "name": "AudioLINK+",
+            "version": "2.1.15"
+        }
+    },
+    "geodata": {
+        "homeId": "home2",
+        "placement": "Bathroom",
+        "IP": "100.0.0.2"
+    },
+    "metadata": {
+        "sensors": [
+            {
+                "id": "condensation",
+                "metric": "Humidity Levels",
+                "unit": "percentage",
+                "value": 65
+            },
+            {
+                "id": "damp",
+                "metric": "Moisture Levels",
+                "unit": "percentage",
+                "value": 24
+            },
+            {
+                "id": "temperature",
+                "metric": "Temperature",
+                "unit": "celsius",
+                "value": 23
+            },
+            {
+                "id": "CO2",
+                "metric": "Co2 Concentration Levels",
+                "unit": "ppm",
+                "value": 400
+            }
+        ],
+        "indicators": []
+    }
+}

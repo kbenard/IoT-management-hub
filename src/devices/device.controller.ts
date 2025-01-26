@@ -1,3 +1,4 @@
+// global Device
 import { Controller, Param, Get, Put, Patch, Post, Delete } from '@nestjs/common';
 import { DeviceService } from './device.service';
 
@@ -11,9 +12,17 @@ export class DeviceController {
 
   /*    GET OPERATIONS    */
   @Get('id/:deviceId')
-  getDevice(@Param('deviceId') deviceId: string): string {
+  async getDevice(@Param('deviceId') deviceId: string) {
     console.log(`device - getDevice - ${deviceId}`);
-    return this.deviceService.getDevice(deviceId);
+    let device;
+    
+    try {
+      device = await this.deviceService.findOne(deviceId);
+      return device
+    } catch (e) {
+
+      return e
+    }
   }
 
   @Get('list/homeId{/:homeId}')

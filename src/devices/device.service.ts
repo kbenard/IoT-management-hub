@@ -1,4 +1,4 @@
-import { Model, Connection, Types } from 'mongoose';
+import { Model, Connection } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Device } from './device.schema';
@@ -13,18 +13,18 @@ export class DeviceService {
     @InjectModel('Device') private deviceModel: Model<Device>
   ) {}
   /*    GET SERVICES    */
-  async findOne(deviceId: string): Promise<string | never> {
+  async findOne(deviceId: string): Promise<string> {
     console.log('device.service - getDevice', deviceId)
     // console.log("Connection:", this.connection)
-    // let all = await this.deviceModel.find()
-    // console.log("All", all)
     console.log("Test")
     let obj1 = await this.deviceModel.findOne({ deviceId: deviceId}).exec();
-    console.log("Obj1", obj1)
-    return `getDevice - ${deviceId}`;
+    console.log("Obj1", JSON.stringify(obj1, null, 2))
+    return "test";
   }
 
   listDevices(homeId?: string): string {
+    // let all = await this.deviceModel.find()
+    // console.log("All", all)
     return `listDevices - ${homeId || 'all'}`;
   }
 

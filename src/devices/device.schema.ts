@@ -40,9 +40,13 @@ export const DeviceSchema = new mongoose.Schema({
     lastUpdateReceived: { type: Number },
     message: { type: String, required: true },
     power: {
-      network: { type: Boolean, required: true },
-      battery: { type: Boolean, required: true },
-      percentage: { type: Number }
+      network: { 
+        required: { type: Boolean, required: true },
+        connected: { type: Boolean, required: true }
+      },
+      battery: { 
+        percentage: { type: Number, required: true }
+      }
     }
   },
   device: {
@@ -75,9 +79,13 @@ export interface Device extends mongoose.Document {
     lastUpdateReceived: number;
     message: string;
     power: {
-      network: boolean;
-      battery: boolean;
-      percentage: number;
+      network: {
+        required: boolean;
+        connected: boolean;
+      };
+      battery: {
+        percentage: number;
+      };
     }
   };
   device: {

@@ -17,7 +17,6 @@ export class DeviceDto {
   @IsString()
   deviceId: string;
 
-  @IsNotEmpty()
   @IsString()
   type: string;
 }

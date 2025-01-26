@@ -2,7 +2,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 // MongoDB
-import { Model, Connection, Document } from 'mongoose';
+import { Model, Connection } from 'mongoose';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 
 // Device data models
@@ -26,8 +26,6 @@ export class DeviceService {
     console.log('device.service - getDevice', deviceId)
     let device = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
 
-    console.log("device: ", device?.deviceId);
-
     if(!device || !('deviceId' in device)) {
       throw new HttpException(`Document with deviceId '${deviceId}' was not found in database`, HttpStatus.BAD_REQUEST);
     }
@@ -38,6 +36,7 @@ export class DeviceService {
   // Retrieves list of summarized device documents
   // When a homeId is supplied, the query narrows the search down to the supplied id, otherwise all documents are retrieved
   // TODO: Implement pagination
+  // TODO: Implement error handling?
   async findAll(homeId?: string): Promise<Device[]> {
     console.log('device.service - findAll', homeId || "All")
     let devices
@@ -47,7 +46,6 @@ export class DeviceService {
     } else {
       devices = await this.deviceModel.find(query);
     }
-    console.log("Devices", homeId, query, devices?.length, devices);
 
     return devices;
   }
@@ -79,8 +77,8 @@ export class DeviceService {
       throw new HttpException(`Database Error: Too many documents with deviceId '${deviceId}' were matched in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    if(res.upsertedCount === 0) {
-      throw new HttpException(`Database Error: No document with deviceId '${deviceId}' was upserted in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
+    if(res.modifiedCount === 0) {
+      throw new HttpException(`Database Error: No document with deviceId '${deviceId}' was modified in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     return {

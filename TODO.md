@@ -1,4 +1,3 @@
 - updateDevice: Verify requirements about device config changes
 - README.md: Finish document + Final Review
 - Double check all task requirements are completed
-- Device simulation?

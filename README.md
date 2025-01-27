@@ -8,7 +8,7 @@ This application relies on the following technologies:
 
 ## Summary of Approach & Challenges
 
-For this technical challenge, I tried to approach this challenge like a project, dividing it in the following short phases: technical & conceptual research, conception, planning, iterative implementation, testing, documentation & final preparations.
+I tried to approach this technical challenge like a project, dividing it in the following short phases: technical & conceptual research, conception, planning, iterative implementation, testing, documentation & final preparations.
 - **Technical & Conceptual Research:** I first went through an initial short phase of research to better grasp the technological requirements of a IoT Device Management backend application. This involved looking at the type of databases that would be more suited for time series data notable for event or historical data, the type of device information that would be relevant to store in a Device state and how to structure it. Other elements of research included which framework to base the RESTful API web app on, general IoT research, and Aico's product range/features/instruction & how it could be modelized.
 - **Conception:** Once I had a clearer view, I decided to stay within the Node.js one to leverage my personal expertise, while taking the opportunity of the challenge to train on technologies I don't have as much experience yet. I went through a short design phase to outline the initial schema and data entities to represent, as well as the use cases & exceptions that each API routes should cover.
 - **Planning:** Planning consisted mostly in breaking down the workload in prioritized milestones, aiming to progressively integrate each element of the web app. 
@@ -55,9 +55,6 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Run tests

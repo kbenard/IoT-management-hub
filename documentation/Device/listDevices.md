@@ -1,4 +1,4 @@
-# Get Device
+# List Devices
 
 Retrieves a summarized list of all stored devices.
 Search can be narrowed down to devices belonging to a single homeId when using the optional `{/homeId/:homeId}` extra path.

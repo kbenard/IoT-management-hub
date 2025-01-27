@@ -14,11 +14,29 @@ Updates the Device state and config in the Database with the supplied body objec
 
 **Code** : `200 OK`
 
+Response body for a successful updateDevice call.
+
+```json
+{
+  "success": true,
+  "deviceId": "device1"
+}
+```
+
 ## Error Responses
 
 **Code** : `400 BAD REQUEST`
 
 Happens when the operation is requested for a non existing deviceId.
+
+**Content examples**
+
+```json
+{
+  "statusCode": 400,
+  "message": "Document with deviceId 'device1' was not found in database."
+}
+```
 
 **Code** : `500 INTERNAL SERVER ERROR`
 
@@ -26,27 +44,20 @@ Happens when the update query was not acknowledged by the database, or in the un
 
 **Content examples**
 
-For a User with ID 1234 on the local database where that User has saved an
-email address and name information.
+Database acknowledgment error.
 
 ```json
 {
-    "id": 1234,
-    "first_name": "Joe",
-    "last_name": "Bloggs",
-    "email": "joe25@example.com"
+  "statusCode": 500,
+  "message": "Database Error: Update success for document with deviceId 'device1' was not acknowledged by the database."
 }
 ```
 
-For a user with ID 4321 on the local database but no details have been set yet.
+More than one documents found for requested deviceId.
 
 ```json
 {
-    "id": 4321,
-    "first_name": "",
-    "last_name": "",
-    "email": ""
+  "statusCode": 500,
+  "message": "Database Error: Too many documents with deviceId 'device1' were matched in the database for this update request. Cannot resolve device."
 }
 ```
-
-## Error Responses

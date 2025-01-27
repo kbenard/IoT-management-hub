@@ -37,12 +37,20 @@ export class DeviceService {
   // TODO: Implement pagination
   // TODO: Implement error handling?
   async findAll(homeId?: string): Promise<Device[]> {
-    let devices
-    let query = homeId ? { 'geodata.homeId': homeId } : {};
+    let devices,
+        query = homeId ? { 'geodata.homeId': homeId } : {},
+        projection = [ // Arbitrary selection, not sure exactly what should be filtered into the summary data
+          'deviceId', 'type',
+          'status.code', 'status.message',
+          'device.model',
+          'geodata.homeId',
+          'metadata'
+        ];
+
     if(homeId) {
-      devices = await this.deviceModel.find(query).exec();
+      devices = await this.deviceModel.find(query, projection).exec();
     } else {
-      devices = await this.deviceModel.find(query);
+      devices = await this.deviceModel.find(query, projection);
     }
 
     return devices;

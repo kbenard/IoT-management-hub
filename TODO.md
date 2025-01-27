@@ -1,11 +1,10 @@
-- listDevices: implement pagination & error handling + implement summary
+- listDevices: implement pagination & error handling
 - Make repository public
 - updateDevice: Verify requirements about device config changes
 - InfluxDB: implement event logging
 - README.md: 
     - Complete Documentation
-    - Write a brief summary of my approach and any interesting challenges I encountered.
-        - 
+    - Write a brief summary of my approach and any interesting challenges I encountered.        - 
 - Double check all task requirements are completed
 - Device simulation?
 - Monitoring platform if possible

@@ -22,6 +22,7 @@ const device1 = require('../../sample/device/device1.json');
 
 describe('DeviceController', () => {
   let deviceController: DeviceController;
+  let deviceToRegister = 'deviceToRegister';
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -159,7 +160,7 @@ describe('DeviceController', () => {
       documentCount = await DeviceModel.countDocuments({ deviceId: deviceDuplicateId });
 
       // Closing connection
-      await mongoose.close();
+      await mongoose.connection.close();
 
       expect(documentCount).toBe(0);
       expect(error?.status).toBe(500);
@@ -168,10 +169,52 @@ describe('DeviceController', () => {
   });
 
   // Tests on use cases relating to the Device controller operation registering a new IoT Device in the database
+
   describe('registerDevice', () => {
-    it('should return "registerDevice - xxxx"', () => {
-      expect(appController.registerDevice("xxxx")).toBe('registerDevice - xxxx');
-    });
+    // Testing a successful registerDevice() call
+    it(`should register device '${deviceToRegister}'`, async () => {
+      let newDeviceData = { ...device1, deviceId: deviceToRegister },
+          newDevice: Device;
+
+      // Using a separate connection to ensure test document is not present yet
+      await mongoose.connect(mongoDBUri);
+      const DeviceModel = mongoose.model('Device', DeviceSchema);
+      let documentCount = await DeviceModel.countDocuments({ deviceId: deviceToRegister });
+      if(documentCount > 0) {
+        await DeviceModel.deleteMany({ deviceId: deviceToRegister });
+      }
+
+      // Closing connection
+      await mongoose.connection.close();
+
+      newDevice = await deviceController.registerDevice(deviceToRegister, newDeviceData);
+      expect(newDevice?.deviceId).toBe(deviceToRegister);
+    }, 10 * SECONDS);
+
+    // Forcing an error on registerDevice() by attempting to insert a duplicate deviceId, attempting exactly the same deviceId as last it() test
+    it(`should error - Document with deviceId '${deviceToRegister}' is already present in the database. Please review the device data or use the appropriate API call.`, async () => {
+      let newDeviceData = { ...device1, deviceId: deviceToRegister },
+          newDevice: Device,
+          error;
+          
+      try {
+        newDevice = await deviceController.registerDevice(deviceToRegister, newDeviceData);
+      } catch(e) {
+        error = e
+      }
+
+      // Using a separate connection to ensure document is deleted after test, then closing connection
+      await mongoose.connect(mongoDBUri);
+      const DeviceModel = mongoose.model('Device', DeviceSchema);
+      let documentCount = await DeviceModel.countDocuments({ deviceId: deviceToRegister });
+      if(documentCount > 0) {
+        await DeviceModel.deleteMany({ deviceId: deviceToRegister });
+      }
+      await mongoose.connection.close();
+
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe(`Document with deviceId '${deviceToRegister}' is already present in the database. Please review the device data or use the appropriate API call.`);
+    }, 10 * SECONDS);
   });
 
   // Tests on use cases relating to the Device controller operation removing a specific IoT Device from the database

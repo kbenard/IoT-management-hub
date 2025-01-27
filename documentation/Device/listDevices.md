@@ -19,6 +19,67 @@ Query parameters can also be used to paginate the search:
 
 **Code** : `200 OK`
 
+**Content examples**
+
+This is a response sample when the request is successful
+
+```bash
+curl -XGET "http://localhost:3000/device/list?limit=1&skip=1"
+```
+
+```json
+[
+  {
+    "status": {
+      "code": "WARNING_MOULD",
+      "message": "Action Required: High Mould Levels Detected"
+    },
+    "device": {
+      "model": "Ei1025"
+    },
+    "geodata": {
+      "homeId": "home2"
+    },
+    "metadata": {
+      "sensors": [
+        {
+          "id": "condensation",
+          "metric": "Humidity Levels",
+          "unit": "percentage",
+          "value": 65,
+          "_id": "6797879f5bd989623a7bbbcd"
+        },
+        {
+          "id": "damp",
+          "metric": "Moisture Levels",
+          "unit": "percentage",
+          "value": 24,
+          "_id": "6797879f5bd989623a7bbbce"
+        },
+        {
+          "id": "temperature",
+          "metric": "Temperature",
+          "unit": "celsius",
+          "value": 23,
+          "_id": "6797879f5bd989623a7bbbcf"
+        },
+        {
+          "id": "CO2",
+          "metric": "Co2 Concentration Levels",
+          "unit": "ppm",
+          "value": 400,
+          "_id": "6797879f5bd989623a7bbbd0"
+        }
+      ],
+      "indicators": []
+    },
+    "_id": "6797879f5bd989623a7bbbcc",
+    "deviceId": "device2",
+    "type": "EnvironmentalSensor"
+  }
+]
+```
+
 ## Error Responses
 
 **Code** : `400 BAD REQUEST`
@@ -27,27 +88,29 @@ Happens when either invalid skip or limit options are passed, or when requested 
 
 **Content examples**
 
-For a User with ID 1234 on the local database where that User has saved an
-email address and name information.
+This is a response sample when the requested skip parameter is not a number.
 
 ```json
 {
-    "id": 1234,
-    "first_name": "Joe",
-    "last_name": "Bloggs",
-    "email": "joe25@example.com"
+  "statusCode": 400,
+  "message": "The Skip query parameter should be a number."
 }
 ```
 
-For a user with ID 4321 on the local database but no details have been set yet.
+This is a response sample when the requested limit parameter is not a number.
 
 ```json
 {
-    "id": 4321,
-    "first_name": "",
-    "last_name": "",
-    "email": ""
+  "statusCode": 400,
+  "message": "The Limit query parameter should be a number."
 }
 ```
 
-## Error Responses
+This is a response sample when the requested limit parameter is superior to 500.
+
+```json
+{
+  "statusCode": 400,
+  "message": "The Limit query parameter value upper limit is 500."
+}
+```

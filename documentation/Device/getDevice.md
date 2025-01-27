@@ -1,7 +1,6 @@
 # Get Device
 
-Get the details of the currently Authenticated User along with basic
-subscription information.
+Retrieves the full details of the requested deviceId.
 
 **URL** : `/device/id/:id`
 

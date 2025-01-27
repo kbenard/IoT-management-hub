@@ -18,8 +18,8 @@ curl -XGET http://localhost:3000/device/list?skip=string
 # Error 400 - Limit Query Parameter is not number
 curl -XGET http://localhost:3000/device/list?skip=string
 
-# Error 400 - Skip is not number
-curl -XGET http://localhost:3000/device/list?skip=string
+# Error 400 - Limit Query Parameter is too high (>500)
+curl -XGET http://localhost:3000/device/list?limit=501
 
 # updateDevice
 # Success - Update device1 - status.lastUpdateReceived

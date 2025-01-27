@@ -1,6 +1,6 @@
 # Update Device
 
-Updates the Device state and config in the Database with the supplied body object. Subject to [data validation rules](../../src/devices/device.dto.ts#L188). Returns a success confirmation object.
+Updates the Device state and config in the Database with the supplied body object through a merge operation. Subject to [data validation rules](../../src/devices/device.dto.ts#L188). Returns a success confirmation object.
 
 **URL** : `/device/id/:id`
 

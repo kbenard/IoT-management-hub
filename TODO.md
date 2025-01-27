@@ -1,0 +1,15 @@
+- Finalise DTO
+- Test routes (Postman? CURL?)
+- Make repository public
+- listDevices: implement pagination & error handling + implement summary
+- updateDevice: 
+    - Implement schema check pre submission (comment in function about schema)
+    - Verify requirements about device config changes
+- InfluxDB: implement event logging
+- README.md: 
+    - Complete Documentation
+    - Write a brief summary of my approach and any interesting challenges I encountered.
+        - 
+- Double check all task requirements are completed
+- Device simulation?
+- Monitoring platform if possible

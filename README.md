@@ -46,6 +46,9 @@ In order to run locally, this service requires for the following to be installed
 
 ## Configuration
 
+## Documentation
+- [Device API](documentation/Device/index.md)
+
 ## Compile and run the project
 
 ```bash

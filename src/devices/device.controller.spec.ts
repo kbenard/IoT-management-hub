@@ -121,6 +121,7 @@ describe('DeviceController', () => {
 
       try { 
         await deviceController.updateDevice(device1.deviceId, {});
+        // Flagged as non valid in VS Code now that PartialType DTOs are in place for device update
         // await deviceController.updateDevice(device1.deviceId, { notInSchema: true });
         // await deviceController.updateDevice(device1.deviceId, { status: { notInSchema: true } });
         // await deviceController.updateDevice(device1.deviceId, { device: { notInSchema: true } });

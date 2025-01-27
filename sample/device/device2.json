@@ -3,7 +3,7 @@
     "type": "EnvironmentalSensor",
     "status": {
         "code": "WARNING_MOULD",
-        "lastUpdateReceived": "1737844444",
+        "lastUpdateReceived": 1737844444,
         "message": "Action Required: High Mould Levels Detected",
         "power": {
             "network": {
@@ -19,7 +19,7 @@
         "model": "Ei1025",
         "name": "Ei1025 Environmental Sensor",
         "manufacturer": "Aico",
-        "ean": 5099383010572,
+        "ean": "5099383010572",
         "firmware": {
             "name": "AudioLINK+",
             "version": "2.1.15"

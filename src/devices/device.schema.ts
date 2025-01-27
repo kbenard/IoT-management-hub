@@ -89,8 +89,9 @@ export interface Device extends mongoose.Document {
     }
   };
   device: {
-    referenceModel: string;
-    manufacturerId: string;
+    model: string;
+    name: string;
+    manufacturer: string;
     ean: number;
     firmware: {
       name: string;

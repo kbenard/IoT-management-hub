@@ -1,9 +1,6 @@
 - listDevices: implement pagination & error handling + implement summary
-- Test routes (Postman? CURL?)
 - Make repository public
-- updateDevice: 
-    - Implement schema check pre submission (comment in function about schema)
-    - Verify requirements about device config changes
+- updateDevice: Verify requirements about device config changes
 - InfluxDB: implement event logging
 - README.md: 
     - Complete Documentation

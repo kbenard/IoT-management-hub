@@ -1,8 +1,7 @@
 import {
   ValidateNested,
   IsString, IsNumber, IsInt, IsBoolean,
-  IsArray, IsObject,
-  IsOptional, IsNotEmpty, IsEAN, IsIP, IsSemVer,
+  IsArray, IsNotEmpty, IsEAN, IsIP, IsSemVer,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PartialType, OmitType, ApiPropertyOptional } from '@nestjs/swagger';
@@ -56,12 +55,15 @@ export class FirmwareDto {
 
 export class DeviceInfoDto {
   @IsString()
-  referenceModel: string;
+  model: string;
 
   @IsString()
-  manufacturerId: string;
+  name: string;
 
-  @IsNumber()
+  @IsString()
+  manufacturer: string;
+
+  @IsString()
   @IsEAN()
   ean: number;
 
@@ -183,6 +185,4 @@ class DeviceUpdateOmitDto extends OmitType(DeviceDto, ['status', 'device', 'geod
 }
 
 // TODO: Investigate why { notFromSchema: true } is not flagged by the global validation pipe
-export class DeviceUpdateDto extends PartialType(DeviceUpdateOmitDto) {
-
-}
+export class DeviceUpdateDto extends PartialType(DeviceUpdateOmitDto) {}

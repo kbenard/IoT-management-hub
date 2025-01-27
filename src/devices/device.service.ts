@@ -27,7 +27,7 @@ export class DeviceService {
     let device = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
 
     if(!device || !('deviceId' in device)) {
-      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database.`, HttpStatus.BAD_REQUEST);
     }
 
     return device;
@@ -54,31 +54,22 @@ export class DeviceService {
   // Updates an existing device document with the supplied information
   // Fails if document does not exists?
   // Merge or Replace?
-  async update(deviceId: string, updateDevice: DeviceDto): Promise<any> {
+  async update(deviceId: string, updateDevice: any): Promise<any> {
     console.log('device.service - updateDevice', deviceId)
-    const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
+    const documentCount = await this.deviceModel.countDocuments({ deviceId });
 
-    if (!device) {
-      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database`, HttpStatus.BAD_REQUEST);
+    if (documentCount === 0) {
+      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database.`, HttpStatus.BAD_REQUEST);
+    }
+
+    if(documentCount > 1) {
+      throw new HttpException(`Database Error: Too many documents with deviceId '${deviceId}' were matched in the database for this update request. Cannot resolve device.`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     const res = await this.deviceModel.updateOne({ deviceId: deviceId }, updateDevice);
     
-    console.log("Update Result: ", res)
     if(!res.acknowledged) {
-      throw new HttpException(`Database Error: Update success for document with deviceId '${deviceId}' was not acknowledged by the database`, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    
-    if(res.matchedCount === 0) {
-      throw new HttpException(`Database Error: No document with deviceId '${deviceId}' was matched in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    if(res.matchedCount > 1) {
-      throw new HttpException(`Database Error: Too many documents with deviceId '${deviceId}' were matched in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    if(res.modifiedCount === 0) {
-      throw new HttpException(`Database Error: No document with deviceId '${deviceId}' was modified in the database for this update request`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(`Database Error: Update success for document with deviceId '${deviceId}' was not acknowledged by the database.`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     return {
@@ -92,7 +83,7 @@ export class DeviceService {
   // Fails if deviceId is already registered or not provided
   async create(deviceData: DeviceDto): Promise<Device> {
     if(!deviceData.deviceId) {
-      throw new HttpException('Mandatory deviceId is missing from device registration request', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Mandatory deviceId is missing from device registration request.', HttpStatus.BAD_REQUEST);
     }
 
     // Checks if provided deviceId is already present in the database, throws error if so
@@ -113,7 +104,7 @@ export class DeviceService {
     const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
 
     if (!device) {
-      throw new HttpException('Incorrect deviceId', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Incorrect deviceId.', HttpStatus.BAD_REQUEST);
     }
 
     let results = await this.deviceModel.deleteOne({ deviceId: deviceId });

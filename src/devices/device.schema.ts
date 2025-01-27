@@ -61,7 +61,7 @@ export const DeviceSchema = new mongoose.Schema({
   },
   geodata: {
     homeId: { type: String, required: true },
-    room: { type: String, required: true },
+    placement: { type: String, required: true },
     IP: { type: String, required: true }
   },
   metadata: {

@@ -1,21 +1,24 @@
+// Nest.js
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Query } from 'mongoose';
 
+// MongoDB
+const mongoose = require('mongoose');
+import { MongooseModule } from '@nestjs/mongoose';
+
+// App
 import { AppController } from '../app.controller';
 import { AppService } from '../app.service';
 
+// Device
 import { DeviceModule } from './device.module';
 import { DeviceController } from './device.controller';
-import { DeviceService } from './device.service';
-import { Device } from './device.schema';
+import { Device, DeviceSchema } from './device.schema';
 
 const config = require('config');
-const device1 = require('../../sample/device/device1.json');
+const mongoDBUri = `mongodb+srv://${config.mongoDB.user}:${config.mongoDB.password}@${config.mongoDB.clusterUrl}/${config.mongoDB.database}?retryWrites=true&w=majority`;
 const SECONDS = 1000;
 
-const uri = `mongodb+srv://${config.mongoDB.user}:${config.mongoDB.password}@${config.mongoDB.clusterUrl}/${config.mongoDB.database}?retryWrites=true&w=majority`;
-console.log("URI: ", uri)
+const device1 = require('../../sample/device/device1.json');
 
 describe('DeviceController', () => {
   let deviceController: DeviceController;
@@ -23,7 +26,7 @@ describe('DeviceController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot(uri),
+        MongooseModule.forRoot(mongoDBUri),
         DeviceModule
       ],
       controllers: [AppController],
@@ -40,7 +43,7 @@ describe('DeviceController', () => {
       expect(device.deviceId).toBe(device1.deviceId);
     }, 10 * SECONDS);
 
-    it("should error - deviceId 'deviceShouldNotExist' was not found in database", async () => {
+    it("should error - deviceId 'deviceShouldNotExist' was not found in database.", async () => {
       let device: Device,
           error;
 
@@ -51,7 +54,7 @@ describe('DeviceController', () => {
       }
       console.log("Error: ", error)
       expect(error?.status).toBe(400);
-      expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database");
+      expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database.");
     }, 10 * SECONDS);
   });
 
@@ -75,9 +78,80 @@ describe('DeviceController', () => {
 
   // Tests on use cases relating to the Device controller operation updating an IoT's details/config in the database
   describe('updateDevice', () => {
-    it('should return "updateDevice - xxxx"', () => {
-      expect(appController.updateDevice("xxxx")).toBe('updateDevice - xxxx');
-    });
+    const now = Date.now(),
+          newDevice = { status: { lastUpdateReceived: now } },
+          deviceDuplicateId = "deviceDuplicate";
+
+    it('device1 should update with new lastUpdateReceived value', async () => {
+      const result = await deviceController.updateDevice(device1.deviceId, newDevice);
+
+      expect(result?.success).toBe(true);
+      expect(result?.deviceId).toBe(device1.deviceId);
+
+      const updatedDevice = await deviceController.getDevice(device1.deviceId);
+      expect(updatedDevice?.status?.lastUpdateReceived).toBe(now);
+    }, 10 * SECONDS);
+
+    it("should error - deviceId 'deviceShouldNotExist' was not found in database.", async () => {
+      let error;
+
+      try { 
+        const result = await deviceController.updateDevice("deviceShouldNotExist", newDevice);
+      } catch (e) {
+        error = e;
+      }
+      
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database.");
+    }, 10 * SECONDS);
+
+    it(`should error - Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`, async () => {
+      let error;
+
+      try { 
+        const result = await deviceController.updateDevice(device1.deviceId, { notInSchema: true });
+      } catch (e) {
+        error = e;
+      }
+      
+      expect(error?.status).toBe(500);
+      expect(error?.response).toBe(`Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`);
+    }, 10 * SECONDS);
+
+    it(`should error - Database Error: Too many documents with deviceId '${deviceDuplicateId}' were matched in the database for this update request. Cannot resolve device.`, async () => {
+      let error;
+      
+      await mongoose.connect(mongoDBUri);
+
+      const DeviceModel = mongoose.model('Device', DeviceSchema);
+      const duplicateDevice1 = new DeviceModel({ ...device1, deviceId: deviceDuplicateId, type: "DuplicateDevice1" });
+      const duplicateDevice2 = new DeviceModel({ ...device1, deviceId: deviceDuplicateId, type: "DuplicateDevice2" });
+
+      let documentCount = await DeviceModel.countDocuments({ deviceId: deviceDuplicateId });
+
+      if(documentCount < 1) {
+        await duplicateDevice1.save();
+      }
+
+      if(documentCount < 2) {
+        await duplicateDevice2.save();
+      }
+
+      try { 
+        const result = await deviceController.updateDevice(deviceDuplicateId, newDevice);
+      } catch (e) {
+        error = e;
+      }
+
+      await DeviceModel.deleteMany({ deviceId: deviceDuplicateId });
+
+      documentCount = await DeviceModel.countDocuments({ deviceId: deviceDuplicateId });
+      console.log("devices: ", documentCount);
+
+      expect(documentCount).toBe(0);
+      expect(error?.status).toBe(500);
+      expect(error?.response).toBe(`Database Error: Too many documents with deviceId '${deviceDuplicateId}' were matched in the database for this update request. Cannot resolve device.`);
+    }, 10 * SECONDS);
   });
 
   // Tests on use cases relating to the Device controller operation registering a new IoT Device in the database

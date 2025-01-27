@@ -23,9 +23,11 @@ const device1 = require('../../sample/device/device1.json');
 describe('DeviceController', () => {
   let deviceController: DeviceController;
   let deviceToRegister = 'deviceToRegister';
+  let app: TestingModule;
 
+  // Initialising test AppModule before tests start
   beforeAll(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    app = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(mongoDBUri),
         DeviceModule
@@ -233,4 +235,11 @@ describe('DeviceController', () => {
       expect(error?.response).toBe(`Document with deviceId '${deviceToRegister}' was not found in database.`);
     }, 10 * SECONDS);
   });
+
+  // Post test clean up, ensuring all open processes are terminated to allow Jest to exit peacefully
+  afterAll(done => {
+    mongoose.connection.close();
+    app.close();
+    done();
+  })
 });

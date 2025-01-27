@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 import { MongooseModule } from '@nestjs/mongoose';
 
 // App
-import { AppController } from '../app.controller';
-import { AppService } from '../app.service';
+import { AppController } from '../app/app.controller';
+import { AppService } from '../app/app.service';
 
 // Device
 import { DeviceModule } from './device.module';
@@ -18,7 +18,7 @@ const config = require('config');
 const mongoDBUri = `mongodb+srv://${config.mongoDB.user}:${config.mongoDB.password}@${config.mongoDB.clusterUrl}/${config.mongoDB.database}?retryWrites=true&w=majority`;
 const SECONDS = 1000;
 
-const device1 = require('../../sample/device/device1.json');
+const device1 = require('../../../sample/device/device1.json');
 
 describe('DeviceController', () => {
   let deviceController: DeviceController;

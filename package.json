@@ -15,7 +15,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "NODE_ENV=dev nest start",
     "start:dev": "NODE_ENV=dev nest start --watch",
     "start:debug": "NODE_ENV=dev nest start --debug --watch",
     "start:prod": "NODE_ENV=prod node dist/main",
@@ -24,11 +24,9 @@
     "test:watch": "NODE_ENV=dev jest --watch",
     "test:cov": "NODE_ENV=dev jest --coverage",
     "test:debug": "NODE_ENV=dev node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "NODE_ENV=dev jest --config ./test/jest-e2e.json",
-    "influxdb:test": "NODE_ENV=dev node scripts/influxdb-test.mjs"
+    "test:e2e": "NODE_ENV=dev jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@influxdata/influxdb3-client": "^1.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/mongoose": "^11.0.0",

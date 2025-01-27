@@ -18,24 +18,25 @@ export async function DeviceSimulator() {
     await mongoose.connect(mongoDBUri);
     const DeviceModel = mongoose.model('Device', DeviceSchema);
     const StatusModel = mongoose.model('Status', new mongoose.Schema({ 
-        device: String, 
+        device: String,
+        homeId: String,
         status: String,
-        sensors: {}, 
+        sensors: {},
         timestamp: Date
     }));
 
     // In case I need to reset the collection content
-    // await StatusModel.deleteMany({});
+    await StatusModel.deleteMany({});
 
 
     const intervalID = setInterval(async function () {
         let devices = (await DeviceModel.find({}));
 
-        // Every device has a 10% chance to get a NO_NETWORK error for data variation
+        // Every device has a 30% chance to get a NO_NETWORK error for data variation
         // Every metric value will be submitted with a +/- 10% variance to the database
         let statusUpdates = devices.map(d => { 
             let random = Math.random();
-            if(random < 0.1) {
+            if(random < 0.3) {
                 d.status.code = "NO_NETWORK";
             }
 

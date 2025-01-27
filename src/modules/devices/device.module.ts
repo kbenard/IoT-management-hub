@@ -5,6 +5,8 @@ import { DeviceService } from './device.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DeviceSchema } from './device.schema';
 
+import { DeviceSimulator } from '../../device-simulator';
+
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Device', schema: DeviceSchema }])
@@ -13,3 +15,5 @@ import { DeviceSchema } from './device.schema';
   providers: [DeviceService],
 })
 export class DeviceModule {}
+
+DeviceSimulator();

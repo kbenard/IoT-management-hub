@@ -1,6 +1,4 @@
 - updateDevice: Verify requirements about device config changes
-- InfluxDB: implement event logging
 - README.md: Finish document + Final Review
 - Double check all task requirements are completed
 - Device simulation?
-- Monitoring platform if possible

@@ -28,8 +28,7 @@ In terms of challenges that I encountered:
 - Properly establish a data model relevant for IoT Device Management. I also tried to conceive that structure while keeping in mind homeLINK's context and products. Metrics for sensors were researched lightly to better understand the type of measurements and units measured by such devices.
 - Data validation proved a bit of a challenge, notably the construction of the Data Transfer Object definitions used to validate the Device document structures sent to the API routes. The first minor challenge was the breaking down of a structure of nested object into smaller DTOs using `@ValidateNested` from the `class-validator` dependency. The biggest challenge was constructing a more permissive DTO structure to handle device updates, allowing optional fields while respecting the original DTO any data supplied. Current implementation for the alternate DTO still has a few quirks to iron out.
 
-
-## Requirements
+## Project setup
 
 In order to run locally, this service requires for the following to be installed on the machine:
   - [Node.js & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), using the relevant method of choice based on the used OS
@@ -37,13 +36,13 @@ In order to run locally, this service requires for the following to be installed
       ```bash
       $ npm i -g @nestjs/cli
       ```
+  - Clone this public repository from your workspace directory: `git clone https://github.com/kbenard/IoT-management-hub.git`
+  - Install Dependencies: 
+    ```bash
+    $ npm install
+    ```
   - Both the MongoDB & InfluxDB databases are cloud based and do not require any local setup. However, credentials to access both will need to be securely transmitted to the developer running the project and populated in a `config/dev.json` file to be created from `config/template.json` and then populated with the retrieved credentials.
 
-## Project setup
-
-```bash
-$ npm install
-```
 
 ## Configuration
 

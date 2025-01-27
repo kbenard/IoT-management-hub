@@ -23,7 +23,6 @@ export class DeviceService {
   /*    GET SERVICES    */
   // Retrieves whole document on one specific device based on supplied deviceId
   async findOne(deviceId: string): Promise<Device> { // Need to fix return type
-    console.log('device.service - getDevice', deviceId)
     let device = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
 
     if(!device || !('deviceId' in device)) {
@@ -38,7 +37,6 @@ export class DeviceService {
   // TODO: Implement pagination
   // TODO: Implement error handling?
   async findAll(homeId?: string): Promise<Device[]> {
-    console.log('device.service - findAll', homeId || "All")
     let devices
     let query = homeId ? { 'geodata.homeId': homeId } : {};
     if(homeId) {
@@ -52,10 +50,7 @@ export class DeviceService {
 
   /*    PUT/PATCH SERVICES    */
   // Updates an existing device document with the supplied information
-  // Fails if document does not exists?
-  // Merge or Replace?
   async update(deviceId: string, updateDevice: any): Promise<any> {
-    console.log('device.service - updateDevice', deviceId)
     const documentCount = await this.deviceModel.countDocuments({ deviceId });
 
     if (documentCount === 0) {

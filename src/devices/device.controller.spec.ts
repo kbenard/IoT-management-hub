@@ -115,12 +115,17 @@ describe('DeviceController', () => {
       expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database.");
     }, 10 * SECONDS);
 
-    // Forcing an error on updateDevice() with a forced schema validation error
+    // Forcing an error on updateDevice() with a forced schema validation error 
     it(`should error - Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`, async () => {
       let error;
 
       try { 
-        const result = await deviceController.updateDevice(device1.deviceId, { notInSchema: true });
+        await deviceController.updateDevice(device1.deviceId, {});
+        // await deviceController.updateDevice(device1.deviceId, { notInSchema: true });
+        // await deviceController.updateDevice(device1.deviceId, { status: { notInSchema: true } });
+        // await deviceController.updateDevice(device1.deviceId, { device: { notInSchema: true } });
+        // await deviceController.updateDevice(device1.deviceId, { geodata: { notInSchema: true } });
+        // await deviceController.updateDevice(device1.deviceId, { metadata: { notInSchema: true } });
       } catch (e) {
         error = e;
       }

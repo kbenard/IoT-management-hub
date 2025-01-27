@@ -1,7 +1,6 @@
-- Finalise DTO
+- listDevices: implement pagination & error handling + implement summary
 - Test routes (Postman? CURL?)
 - Make repository public
-- listDevices: implement pagination & error handling + implement summary
 - updateDevice: 
     - Implement schema check pre submission (comment in function about schema)
     - Verify requirements about device config changes

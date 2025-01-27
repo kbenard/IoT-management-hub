@@ -6,7 +6,6 @@ import { AppService } from './app.service';
 
 const config = require('config');
 const uri = `mongodb+srv://${config.mongoDB.user}:${config.mongoDB.password}@${config.mongoDB.clusterUrl}/${config.mongoDB.database}?retryWrites=true&w=majority`;
-console.log("URI: ", uri)
 
 @Module({
   imports: [

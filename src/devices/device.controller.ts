@@ -1,7 +1,7 @@
-import { Controller, Param, Body, Get, Put, Patch, Post, Delete } from '@nestjs/common';
+import { Controller, ValidationPipe, UsePipes, Param, Body, Get, Put, Patch, Post, Delete } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { Device } from './device.schema';
-import { DeviceDto } from './device.dto';
+import { DeviceDto, DeviceUpdateDto } from './device.dto';
 
 // This controller handles incoming requests related to IoT device operations within the iot-management-hub service
 // Every request path need to be prefixed with /device
@@ -32,7 +32,7 @@ export class DeviceController {
   /*    PUT OPERATIONS    */
   @Put('id/:deviceId')
   @Patch('id/:deviceId')
-  async updateDevice(@Param('deviceId') deviceId: string, @Body() updateDevice: any) {
+  async updateDevice(@Param('deviceId') deviceId: string, @Body() updateDevice: DeviceUpdateDto) {
     console.log(`device - updateDevice - ${deviceId}`);
     let result = await this.deviceService.update(deviceId, updateDevice)
     return result;

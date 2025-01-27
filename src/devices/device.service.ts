@@ -7,7 +7,7 @@ import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 
 // Device data models
 import { Device } from './device.schema';
-import { DeviceDto } from './device.dto';
+import { DeviceDto, DeviceUpdateDto } from './device.dto';
 
 // App Global Config
 const config = require('config');
@@ -50,7 +50,7 @@ export class DeviceService {
 
   /*    PUT/PATCH SERVICES    */
   // Updates an existing device document with the supplied information
-  async update(deviceId: string, updateDevice: any): Promise<any> {
+  async update(deviceId: string, updateDevice: DeviceUpdateDto): Promise<any> {
     const documentCount = await this.deviceModel.countDocuments({ deviceId });
 
     if (documentCount === 0) {

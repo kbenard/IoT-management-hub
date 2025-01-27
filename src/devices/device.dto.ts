@@ -2,10 +2,10 @@ import {
   ValidateNested,
   IsString, IsNumber, IsInt, IsBoolean,
   IsArray, IsObject,
-  IsNotEmpty, IsEAN, IsIP, isSemVer,
-  IsSemVer,
+  IsOptional, IsNotEmpty, IsEAN, IsIP, IsSemVer,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { PartialType, OmitType, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class NetworkDto {
   @IsBoolean()
@@ -120,7 +120,6 @@ export class MetadataDto {
   indicators: IndicatorDto[];
 }
 
-// TODO: Complete DTO
 export class DeviceDto {
   @IsNotEmpty()
   @IsString()
@@ -145,4 +144,45 @@ export class DeviceDto {
   @ValidateNested()
   @Type(() => MetadataDto)
   metadata: MetadataDto;
+}
+
+
+export class StatusUpdateDto extends PartialType(StatusDto) {}
+
+export class FirmwareUpdateDto extends PartialType(FirmwareDto) {}
+
+export class DeviceInfoUpdateOmitDto extends OmitType(DeviceInfoDto, ['firmware'] as const) {
+  @ValidateNested()
+  @Type(() => FirmwareUpdateDto)
+  firmware: FirmwareUpdateDto
+}
+
+export class DeviceInfoUpdateDto extends PartialType(DeviceInfoDto) {}
+
+export class GeodataUpdateDto extends PartialType(GeodataDto) {}
+
+// If more time try to investigate outcome of arrays of nested objects merging
+export class MetadataUpdateDto extends PartialType(MetadataDto) {}
+
+class DeviceUpdateOmitDto extends OmitType(DeviceDto, ['status', 'device', 'geodata', 'metadata'] as const) {
+  @ValidateNested()
+  @Type(() => StatusUpdateDto)
+  status: StatusUpdateDto;
+
+  @ValidateNested()
+  @Type(() => DeviceInfoUpdateDto)
+  device: DeviceInfoUpdateDto;
+
+  @ValidateNested()
+  @Type(() => DeviceInfoUpdateDto)
+  geodata: GeodataUpdateDto;
+
+  @ValidateNested()
+  @Type(() => DeviceInfoUpdateDto)
+  metadata: MetadataUpdateDto;
+}
+
+// TODO: Investigate why { notFromSchema: true } is not flagged by the global validation pipe
+export class DeviceUpdateDto extends PartialType(DeviceUpdateOmitDto) {
+
 }

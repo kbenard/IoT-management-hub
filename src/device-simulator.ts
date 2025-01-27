@@ -26,8 +26,7 @@ export async function DeviceSimulator() {
     }));
 
     // In case I need to reset the collection content
-    await StatusModel.deleteMany({});
-
+    // await StatusModel.deleteMany({});
 
     const intervalID = setInterval(async function () {
         let devices = (await DeviceModel.find({}));
@@ -42,7 +41,7 @@ export async function DeviceSimulator() {
 
             let sensors = (d.metadata?.sensors || []).reduce((mem, sensor) => {
                 let varDirection = Math.random() < 0.5 ? -1 : 1;
-                let varPercentage = (Math.random() * 0.1);
+                let varPercentage = (Math.random() * (sensor.value < 0.05 ? 0.3 : 0.1));
                 mem[sensor.metric] = { unit: sensor.unit, value: Math.round((sensor.value + (sensor.value * (varDirection * varPercentage)))*100)/100, oldValue: sensor.value, varDirection, varPercentage };
                 return mem
             }, {});

@@ -1,6 +1,6 @@
 {
   "name": "iot-management-hub",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Backend system acting as central hub for managing IoT devices in a smart home environment",
   "private": false,
   "keywords": [

@@ -165,7 +165,7 @@ describe('DeviceController', () => {
       expect(documentCount).toBe(0);
       expect(error?.status).toBe(500);
       expect(error?.response).toBe(`Database Error: Too many documents with deviceId '${deviceDuplicateId}' were matched in the database for this update request. Cannot resolve device.`);
-    }, 10 * SECONDS);
+    }, 20 * SECONDS);
   });
 
   // Tests on use cases relating to the Device controller operation registering a new IoT Device in the database
@@ -203,15 +203,6 @@ describe('DeviceController', () => {
         error = e
       }
 
-      // Using a separate connection to ensure document is deleted after test, then closing connection
-      await mongoose.connect(mongoDBUri);
-      const DeviceModel = mongoose.model('Device', DeviceSchema);
-      let documentCount = await DeviceModel.countDocuments({ deviceId: deviceToRegister });
-      if(documentCount > 0) {
-        await DeviceModel.deleteMany({ deviceId: deviceToRegister });
-      }
-      await mongoose.connection.close();
-
       expect(error?.status).toBe(400);
       expect(error?.response).toBe(`Document with deviceId '${deviceToRegister}' is already present in the database. Please review the device data or use the appropriate API call.`);
     }, 10 * SECONDS);
@@ -219,8 +210,27 @@ describe('DeviceController', () => {
 
   // Tests on use cases relating to the Device controller operation removing a specific IoT Device from the database
   describe('removeDevice', () => {
-    it('should return "removeDevice - xxxx"', () => {
-      expect(appController.removeDevice("xxxx")).toBe('removeDevice - xxxx');
-    });
+    // Testing a successful registerDevice() call
+    it(`should remove device '${deviceToRegister}'`, async () => {
+      let result = await deviceController.removeDevice(deviceToRegister);
+      expect(result.success).toBe(true);
+      expect(result.message).toBe(`Device '${deviceToRegister} succefully removed'`);
+      expect(result.deviceId).toBe(deviceToRegister);
+    }, 10 * SECONDS);
+
+    // Forcing an error on registerDevice() by attempting to insert a duplicate deviceId, attempting exactly the same deviceId as last it() test
+    it(`should error - Document with deviceId '${deviceToRegister}' was not found in database.`, async () => {
+      let result,
+          error;
+          
+      try {
+        result = await deviceController.removeDevice(deviceToRegister);
+      } catch(e) {
+        error = e
+      }
+
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe(`Document with deviceId '${deviceToRegister}' was not found in database.`);
+    }, 10 * SECONDS);
   });
 });

@@ -100,14 +100,18 @@ export class DeviceService {
 
   /*    DELETE SERVICES    */
   // Removes a specific device from the database, fails if deviceId not found
-  async delete(deviceId: string | string[]): Promise<string> {
+  async delete(deviceId: string | string[]): Promise<any> {
     const device = await this.deviceModel.findOne({ deviceId: deviceId }).exec();
 
     if (!device) {
-      throw new HttpException('Incorrect deviceId.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Document with deviceId '${deviceId}' was not found in database.`, HttpStatus.BAD_REQUEST);
     }
 
     let results = await this.deviceModel.deleteOne({ deviceId: deviceId });
-    return `removeDevice - ${deviceId}`;
+    return {
+      success: results.deletedCount === 1,
+      message: `Device '${deviceId} succefully removed'`,
+      deviceId
+    };
   }
 }

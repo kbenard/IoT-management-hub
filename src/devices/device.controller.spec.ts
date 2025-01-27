@@ -38,11 +38,13 @@ describe('DeviceController', () => {
 
   // Tests on use cases relating to the Device controller operation retrieving an IoT Device's full details from the database
   describe('getDevice', () => {
+    // Testing a successful getDevice() call
     it('should return "device1"', async () => {
       let device: Device  = await deviceController.getDevice(device1.deviceId)
       expect(device.deviceId).toBe(device1.deviceId);
     }, 10 * SECONDS);
 
+    // Forcing an error on getDevice() with a non existing deviceId
     it("should error - deviceId 'deviceShouldNotExist' was not found in database.", async () => {
       let device: Device,
           error;
@@ -60,16 +62,19 @@ describe('DeviceController', () => {
 
   // Tests on use cases relating to the Device controller operation retrieving a details summary from a list of devices from the database
   describe('listDevices', () => {
+    // Testing listDevices() with no homeId narrowing, list of devices should contain deviceIds device1, device2 & device3
     it('should return 3', async () => {
       let devices: Device[] = await deviceController.listDevices()
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(3);
     }, 10 * SECONDS);
 
+    // Testing listDevices() with homeId home1 narrowing, list of devices should contain only device1 & device3
     it('should return 2', async () => {
       let devices: Device[] = await deviceController.listDevices("home1")
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(2);
     }, 10 * SECONDS);
 
+    // Testing listDevices() with a non existing homeId, should not return any devices
     it('should return 0', async () => {
       let devices: Device[] = await deviceController.listDevices("homeShouldNotExist")
       expect(devices.length).toBe(0);
@@ -82,6 +87,7 @@ describe('DeviceController', () => {
           newDevice = { status: { lastUpdateReceived: now } },
           deviceDuplicateId = "deviceDuplicate";
 
+    // Testing a successful updateDevice() call on device1
     it('device1 should update with new lastUpdateReceived value', async () => {
       const result = await deviceController.updateDevice(device1.deviceId, newDevice);
 
@@ -92,6 +98,7 @@ describe('DeviceController', () => {
       expect(updatedDevice?.status?.lastUpdateReceived).toBe(now);
     }, 10 * SECONDS);
 
+    // Forcing an error on updateDevice() with a non existing deviceId
     it("should error - deviceId 'deviceShouldNotExist' was not found in database.", async () => {
       let error;
 
@@ -105,6 +112,7 @@ describe('DeviceController', () => {
       expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database.");
     }, 10 * SECONDS);
 
+    // Forcing an error on updateDevice() with a forced schema validation error
     it(`should error - Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`, async () => {
       let error;
 
@@ -118,9 +126,11 @@ describe('DeviceController', () => {
       expect(error?.response).toBe(`Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`);
     }, 10 * SECONDS);
 
+    // Forcing an error on updateDevice() with a duplicate deviceId occurence (forced manually outside of API boundaries)
     it(`should error - Database Error: Too many documents with deviceId '${deviceDuplicateId}' were matched in the database for this update request. Cannot resolve device.`, async () => {
       let error;
       
+      // Using a separate unrestricted connection to force a duplicate deviceId document insertion, with purpose of triggering error
       await mongoose.connect(mongoDBUri);
 
       const DeviceModel = mongoose.model('Device', DeviceSchema);
@@ -143,10 +153,13 @@ describe('DeviceController', () => {
         error = e;
       }
 
+      // Removing duplicate documents after test
       await DeviceModel.deleteMany({ deviceId: deviceDuplicateId });
 
       documentCount = await DeviceModel.countDocuments({ deviceId: deviceDuplicateId });
-      console.log("devices: ", documentCount);
+
+      // Closing connection
+      await mongoose.close();
 
       expect(documentCount).toBe(0);
       expect(error?.status).toBe(500);

@@ -24,7 +24,7 @@ describe('DeviceController', () => {
   let deviceController: DeviceController;
   let deviceToRegister = 'deviceToRegister';
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(mongoDBUri),
@@ -35,7 +35,7 @@ describe('DeviceController', () => {
     }).compile();
 
     deviceController = app.get<DeviceController>(DeviceController);
-  });
+  }, 10 * SECONDS);
 
   // Tests on use cases relating to the Device controller operation retrieving an IoT Device's full details from the database
   describe('getDevice', () => {

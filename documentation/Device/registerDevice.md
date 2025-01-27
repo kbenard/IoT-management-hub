@@ -14,11 +14,7 @@ Registers a deviceId in the database with the structure supplied in the request 
 
 **Code** : `200 OK`
 
-## Error Responses
 
-**Code** : `400 BAD REQUEST`
-
-Happens when the operation is requested for a non existing deviceId.
 
 **Content examples**
 
@@ -34,15 +30,8 @@ email address and name information.
 }
 ```
 
-For a user with ID 4321 on the local database but no details have been set yet.
-
-```json
-{
-    "id": 4321,
-    "first_name": "",
-    "last_name": "",
-    "email": ""
-}
-```
-
 ## Error Responses
+
+**Code** : `400 BAD REQUEST`
+
+Happens when the operation is requested for a non existing deviceId.

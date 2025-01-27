@@ -36,7 +36,7 @@ export class DeviceService {
   // When a homeId is supplied, the query narrows the search down to the supplied id, otherwise all documents are retrieved
   // TODO: Implement pagination
   // TODO: Implement error handling?
-  async findAll(homeId?: string): Promise<Device[]> {
+  async findAll(options: any = {}, homeId?: string): Promise<Device[]> {
     let devices,
         query = homeId ? { 'geodata.homeId': homeId } : {},
         projection = [ // Arbitrary selection, not sure exactly what should be filtered into the summary data

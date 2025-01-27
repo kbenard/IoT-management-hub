@@ -52,7 +52,7 @@ describe('DeviceController', () => {
       let device: Device,
           error;
 
-      try { 
+      try {
         device = await deviceController.getDevice("deviceShouldNotExist")
       } catch (e) {
         error = e;
@@ -67,20 +67,68 @@ describe('DeviceController', () => {
   describe('listDevices', () => {
     // Testing listDevices() with no homeId narrowing, list of devices should contain deviceIds device1, device2 & device3
     it('should return 3', async () => {
-      let devices: Device[] = await deviceController.listDevices()
+      let devices: Device[] = await deviceController.listDevices({})
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(3);
     }, 10 * SECONDS);
 
     // Testing listDevices() with homeId home1 narrowing, list of devices should contain only device1 & device3
     it('should return 2', async () => {
-      let devices: Device[] = await deviceController.listDevices("home1")
+      let devices: Device[] = await deviceController.listDevices({}, "home1")
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(2);
     }, 10 * SECONDS);
 
     // Testing listDevices() with a non existing homeId, should not return any devices
     it('should return 0', async () => {
-      let devices: Device[] = await deviceController.listDevices("homeShouldNotExist")
+      let devices: Device[] = await deviceController.listDevices({}, "homeShouldNotExist")
       expect(devices.length).toBe(0);
+    }, 10 * SECONDS);
+
+    // Forcing an error on listDevices() with a non number skip query parameter
+    it("should error - The Skip query parameter should be a number.", async () => {
+      let devices: Device[],
+          error;
+
+      try {
+        // Parameter values are string as coming from the querystring in real use case
+        devices = await deviceController.listDevices({ skip: "test" })
+      } catch (e) {
+        error = e;
+      }
+      console.log("Error: ", error)
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("The Skip query parameter should be a number.");
+    }, 10 * SECONDS);
+
+    // Forcing an error on listDevices() with a non number limit query parameter
+    it("should error - The Limit query parameter should be a number.", async () => {
+      let devices: Device[],
+          error;
+
+      try {
+        // Parameter values are string as coming from the querystring in real use case
+        devices = await deviceController.listDevices({ limit: "test" })
+      } catch (e) {
+        error = e;
+      }
+      console.log("Error: ", error)
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("The Limit query parameter should be a number.");
+    }, 10 * SECONDS);
+
+    // Forcing an error on listDevices() with a limit parameter superior to the 500 max value
+    it("should error - The Limit query parameter value upper limit is 500.", async () => {
+      let devices: Device[],
+          error;
+
+      try {
+        // Parameter values are string as coming from the querystring in real use case
+        devices = await deviceController.listDevices({ limit: "501" })
+      } catch (e) {
+        error = e;
+      }
+      console.log("Error: ", error)
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("The Limit query parameter value upper limit is 500.");
     }, 10 * SECONDS);
   });
 

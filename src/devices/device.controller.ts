@@ -1,4 +1,8 @@
-import { Controller, ValidationPipe, UsePipes, Param, Body, Get, Put, Patch, Post, Delete } from '@nestjs/common';
+import { 
+  Controller, HttpException, HttpStatus,
+  Param, Query, Body,
+  Get, Put, Patch, Post, Delete
+} from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { Device } from './device.schema';
 import { DeviceDto, DeviceUpdateDto } from './device.dto';
@@ -23,9 +27,29 @@ export class DeviceController {
   // Retrieves a details summary from a list of devices
   // Can be narrowed down to device belonging to a specific homeId, if not, retrieve for all devices
   @Get('list{/homeId/:homeId}')
-  async listDevices(@Param('homeId') homeId?: string) {
-    console.log(`device - listDevices - ${homeId}`);
-    let devices = await this.deviceService.findAll(homeId)
+  async listDevices(
+    @Query() query: any,
+    @Param('homeId') homeId?: string
+  ) {
+    console.log(`device - listDevices - ${homeId || "All"}`, query);
+    if(query.skip) {
+      if(isNaN(query.skip)) {
+        throw new HttpException(`The Skip query parameter should be a number.`, HttpStatus.BAD_REQUEST);
+      }
+      query.skip = Number(query.skip);
+    } 
+
+    if(query.limit) {
+      if(isNaN(query.limit)) {
+        throw new HttpException(`The Limit query parameter should be a number.`, HttpStatus.BAD_REQUEST);
+      }
+      query.limit = Number(query.limit);
+      if(query.limit > 500) {
+        throw new HttpException(`The Limit query parameter value upper limit is 500.`, HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    let devices = await this.deviceService.findAll(query, homeId)
     return devices;
   }
 

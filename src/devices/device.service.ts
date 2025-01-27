@@ -48,9 +48,9 @@ export class DeviceService {
         ];
 
     if(homeId) {
-      devices = await this.deviceModel.find(query, projection).exec();
+      devices = await this.deviceModel.find(query, projection, options).exec();
     } else {
-      devices = await this.deviceModel.find(query, projection);
+      devices = await this.deviceModel.find(query, projection, options);
     }
 
     return devices;

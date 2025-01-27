@@ -55,7 +55,6 @@ export class DeviceController {
 
   /*    PUT OPERATIONS    */
   @Put('id/:deviceId')
-  @Patch('id/:deviceId')
   async updateDevice(@Param('deviceId') deviceId: string, @Body() updateDevice: DeviceUpdateDto) {
     console.log(`device - updateDevice - ${deviceId}`);
     let result = await this.deviceService.update(deviceId, updateDevice)

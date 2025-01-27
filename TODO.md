@@ -1,5 +1,3 @@
-- listDevices: implement pagination & error handling
-- Make repository public
 - updateDevice: Verify requirements about device config changes
 - InfluxDB: implement event logging
 - README.md: 

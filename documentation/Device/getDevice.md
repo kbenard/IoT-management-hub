@@ -1,6 +1,6 @@
 # Get Device
 
-Retrieves the full details of the requested deviceId.
+Retrieves the full details of the requested deviceId. Returns the matched database document.
 
 **URL** : `/device/id/:id`
 

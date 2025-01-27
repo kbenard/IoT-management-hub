@@ -1,6 +1,6 @@
 # Delete Device
 
-Deletes the requested deviceId document from the database.
+Deletes the requested deviceId document from the database. Returns a success confirmation object.
 
 **URL** : `/device/id/:id`
 
@@ -10,11 +10,21 @@ Deletes the requested deviceId document from the database.
 
 **Permissions required** : None
 
-**
-
 ## Success Response
 
 **Code** : `200 OK`
+
+**Content examples**
+
+Here is an example of returned response when the requested deviceId has been successfully removed from the database.
+
+```json
+{
+  "success": true,
+  "message": "Device 'deviceToCreateThenDelete succefully removed'",
+  "deviceId": "deviceToCreateThenDelete"
+}
+```
 
 ## Error Responses
 
@@ -24,27 +34,9 @@ Happens when the operation is requested for a non existing deviceId.
 
 **Content examples**
 
-For a User with ID 1234 on the local database where that User has saved an
-email address and name information.
-
 ```json
 {
-    "id": 1234,
-    "first_name": "Joe",
-    "last_name": "Bloggs",
-    "email": "joe25@example.com"
+  "statusCode": 400,
+  "message": "Document with deviceId 'deviceShouldNotExist' was not found in database."
 }
 ```
-
-For a user with ID 4321 on the local database but no details have been set yet.
-
-```json
-{
-    "id": 4321,
-    "first_name": "",
-    "last_name": "",
-    "email": ""
-}
-```
-
-## Error Responses

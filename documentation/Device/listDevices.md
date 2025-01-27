@@ -1,7 +1,6 @@
 # List Devices
 
-Retrieves a summarized list of all stored devices.
-Search can be narrowed down to devices belonging to a single homeId when using the optional `{/homeId/:homeId}` extra path.
+Retrieves a summarized list of all stored devices. Search can be narrowed down to devices belonging to a single homeId when using the optional `{/homeId/:homeId}` extra path. Returns a list of simplified device documents.
 
 Query parameters can also be used to paginate the search:
 - `limit`: maximum number of records sent back in the request response

@@ -1,6 +1,6 @@
 # Update Device
 
-Updates the Device state and config in the Database with the supplied body object. Subject to data validation rules.
+Updates the Device state and config in the Database with the supplied body object. Subject to data validation rules. Returns a success confirmation object.
 
 **URL** : `/device/id/:id`
 

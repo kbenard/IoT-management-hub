@@ -1,8 +1,6 @@
 - updateDevice: Verify requirements about device config changes
 - InfluxDB: implement event logging
-- README.md: 
-    - Complete Documentation
-    - Write a brief summary of my approach and any interesting challenges I encountered.        - 
+- README.md: Finish document + Final Review
 - Double check all task requirements are completed
 - Device simulation?
 - Monitoring platform if possible

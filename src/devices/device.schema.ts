@@ -98,7 +98,7 @@ export interface Device extends mongoose.Document {
     };
   };
   geodata: {
-    id: string;
+    homeId: string;
     placement: string;
     IP: string;
   };

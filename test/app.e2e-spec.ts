@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
-import { DeviceModule } from '../src/device/device.module';
+import { DeviceModule } from '../src/devices/device.module';
 
 describe('DeviceController (e2e)', () => {
   let app: INestApplication<App>;

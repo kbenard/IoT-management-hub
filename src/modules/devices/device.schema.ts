@@ -127,6 +127,7 @@ timestamp: number;
 }
 
 export const RequestEventSchema = new mongoose.Schema({ 
+  calculatedPath: String,
   path: String,
   params: {},
   query: {},

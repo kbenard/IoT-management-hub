@@ -5,7 +5,7 @@ import { DeviceService } from './device.service';
 
 // MongoDB
 import { MongooseModule } from '@nestjs/mongoose';
-import { DeviceSchema } from './device.schema';
+import { DeviceSchema, RequestEventSchema } from './device.schema';
 
 // Device Behaviour Simulation Routine
 import { DeviceSimulator } from '../../device-simulator';
@@ -13,9 +13,11 @@ import { DeviceSimulator } from '../../device-simulator';
 // Config
 const config = require('config');
 
+console.log("Device Service: ", DeviceService)
+
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'Device', schema: DeviceSchema }])
+    MongooseModule.forFeature([{ name: 'Device', schema: DeviceSchema }, { name: 'Event', schema: RequestEventSchema }])
   ],
   controllers: [DeviceController],
   providers: [DeviceService],

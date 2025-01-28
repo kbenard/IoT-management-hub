@@ -6,7 +6,7 @@ This application relies on the following technologies:
 - The NestJS framework to build the RESTful API backend service. It fully supports TypeScript, allows to easily integrate MongoDB through the [Mongoose](https://mongoosejs.com/) ODM for proper data modelisation and validation, and allows to quickly generate project templates with modules, controllers, service & unit testing scripts.
 - MongoDB for device state and history data management, as its collections can also be optimised for time series data. The Device state data being more structured and static, it seemed more appropriate to resort to a Key/Document database to store it in a fluid but structured object form. MongoDB's free cloud plan also allows me to simplify the project setup on other machines by having a remote common database. As an added bonus, MongoDB Atlas also gives access to an integrated monitoring platform that I used to create a basic dashboard with a few graphs and feed it with the Device history.
 
-## Summary of Approach & Challenges
+## Approach
 
 I tried to approach this technical challenge like a project, splitting it in the following short phases:
 - **Technical & Conceptual Research:** I went through an initial short phase of research to better grasp the technological requirements of a IoT Device Management backend application. This involved looking at which type of database would be more suited for time series data, the type of device information that would be relevant to store in a Device state and how to structure it. Other elements of research included which framework to use as a RESTful API web app base, general IoT research, and Aico's product range/features/instruction for insights & how it could be modelised into a data model.
@@ -18,8 +18,11 @@ I tried to approach this technical challenge like a project, splitting it in the
   - The actual implementation of the API routes logic came then with proper data manipulation. It was finalized with work on the Device controller unit testing script.
   - Data validation implementation then came to ensure the data supplied to the web app is adhering to the wanted data model, notably with the updateService API route.
 - **Testing:** Testing of every route and use case with unit testing script & Curl. Supplying of sample data structures & example bash commands covering most use cases.
-- **Documentation:** Writing the contents of the README.md file with Summary of Approach & Challenges, Intructions. Writing of a short API documentation.
+- **Documentation:** Writing the contents of the README.md file with Summary of Approach & Challenges, Intructions. Writing of a concise API documentation.
 - **Final Preparations:** Making sure everything is ready to be delivered to the reviewer, database access is sorted, credentials are ready to be securely shared, testing the setup process on a separate user and testing everything works.
+- **Extra:** `device-simulator` interval routine running in the background to simulate IoT device "live" data. Monitoring dashboard created on MongoDB Atlas to report on the "live" IoT data of the `device-simulator` loop.
+
+## Challenges
 
 In terms of challenges that I encountered:
 - Navigating technologies I was not familiar with & integrating those together in a coherent manner suitable to fulfil the challenge's requirements and specs in a timely manner.

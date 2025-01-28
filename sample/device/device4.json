@@ -1,0 +1,66 @@
+{
+    "deviceId": "device4",
+    "type": "FireAlarm",
+    "status": {
+        "code": "OK",
+        "lastUpdateReceived": 1737444444,
+        "message": "No problem detected",
+        "power": {
+            "network": {
+                "required": true,
+                "connected": true
+            },
+            "battery": {
+                "percentage": 100
+            }
+        }
+    },
+    "device": {
+        "model": "Ei3024",
+        "name": "Ei3024 Multi-Sensor Fire Alarm",
+        "manufacturer": "Aico",
+        "ean": "5099383006537",
+        "firmware": {
+            "name": "AudioLINK+",
+            "version": "2.1.15"
+        }
+    },
+    "geodata": {
+        "homeId": "home3",
+        "placement": "Bedroom",
+        "IP": "100.0.0.3"
+    },
+    "metadata": {
+        "sensors": [
+            {
+                "id": "optical",
+                "metric": "Optical Density Per Meter",
+                "unit": "OD/m",
+                "value": 0.09
+            },
+            {
+                "id": "thermistor",
+                "metric": "Temperature",
+                "unit": "celsius",
+                "value": 22
+            }
+        ],
+        "indicators": [
+            {
+                "id": "Power",
+                "type": "light",
+                "active": true
+            },
+            {
+                "id": "Alarm",
+                "type": "light",
+                "active": false
+            },
+            {
+                "id": "Fault",
+                "type": "light",
+                "active": false
+            }
+        ]
+    }
+}

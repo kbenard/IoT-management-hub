@@ -1,4 +1,4 @@
 - updateDevice: Verify requirements about device config changes
-- Increase sample dataset
+- updateDevice: Data loss?
 - README.md: Finish document + Final Review
 - Double check all task requirements are completed

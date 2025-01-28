@@ -1,0 +1,62 @@
+{
+    "deviceId": "device6",
+    "type": "EnvironmentalSensor",
+    "status": {
+        "code": "OK",
+        "lastUpdateReceived": 1737866666,
+        "message": "No problem detected",
+        "power": {
+            "network": {
+                "required": true,
+                "connected": true
+            },
+            "battery": {
+                "percentage": 100
+            }
+        }
+    },
+    "device": {
+        "model": "Ei1025",
+        "name": "Ei1025 Environmental Sensor",
+        "manufacturer": "Aico",
+        "ean": "5099383010572",
+        "firmware": {
+            "name": "AudioLINK+",
+            "version": "2.1.15"
+        }
+    },
+    "geodata": {
+        "homeId": "home3",
+        "placement": "Bathroom",
+        "IP": "100.0.0.3"
+    },
+    "metadata": {
+        "sensors": [
+            {
+                "id": "condensation",
+                "metric": "Humidity Levels",
+                "unit": "percentage",
+                "value": 30
+            },
+            {
+                "id": "damp",
+                "metric": "Moisture Levels",
+                "unit": "percentage",
+                "value": 19
+            },
+            {
+                "id": "temperature",
+                "metric": "Temperature",
+                "unit": "celsius",
+                "value": 20
+            },
+            {
+                "id": "CO2",
+                "metric": "Co2 Concentration Levels",
+                "unit": "ppm",
+                "value": 800
+            }
+        ],
+        "indicators": []
+    }
+}

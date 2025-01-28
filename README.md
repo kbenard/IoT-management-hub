@@ -77,8 +77,9 @@ A markdown documentation page is available for the Device API controller:
 
 ## Monitoring
 
-A basic monitoring dashboard for Device history has been setup though MongoDB Atlas, it can be accessed on request.
-An old sample in PDF format can also be found in this repository [here](documentation/Monitoring/monitoring-report-example.pdf)
+A basic monitoring dashboard for Device history has been setup though MongoDB Atlas. An HTML page has been stored in the repository to allow for external access to the graphs, it can be found in [here](documentation/Monitoring/monitoring.html)
+
+The dashboard can be also be shared on MongoDB Atlas on request to see how the graphs are configured.
 
 ## Compile and run the project
 

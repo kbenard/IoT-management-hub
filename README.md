@@ -67,7 +67,8 @@ In order to run locally, a `config/dev.json` file needs to be built from the tem
         "intervalDelay": 60,
         "resetEventsAtRestart": false
     }
-  }  ```
+  }
+  ```
 
 ## Documentation
 

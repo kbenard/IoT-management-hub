@@ -1,3 +1,2 @@
 - updateDevice: Implement mergeWith customizer to deal with sensors and indicators arrays
 - README.md: Finish document + Final Review
-- Double check all task requirements are completed

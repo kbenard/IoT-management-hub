@@ -78,12 +78,10 @@ export class DeviceService {
       throw new HttpException(`Database Error: Too many documents with deviceId '${deviceId}' were matched in the database for this update request. Cannot resolve device.`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    console.log("New Device", JSON.stringify(updateDevice, null, 2), newDevice._id, JSON.stringify(newDevice, null, 2));
     const res = await this.deviceModel.findByIdAndUpdate(device._id, newDevice);
 
     let updatedDevice = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
-    console.log("updatedDevice: ", JSON.stringify(updatedDevice?.status, null, 2));
-
+    
     if(!res) {
       throw new HttpException(`Database Error: Document with deviceId '${deviceId}' was not updated in the database.`, HttpStatus.INTERNAL_SERVER_ERROR);
     }

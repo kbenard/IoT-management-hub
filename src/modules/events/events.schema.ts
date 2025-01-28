@@ -17,7 +17,7 @@ export interface StatusEvent extends mongoose.Document {
   timestamp: number;
 }
 
-export const requestEventSchema = new mongoose.Schema({ 
+export const RequestEventSchema = new mongoose.Schema({ 
     path: String,
     statusCode: Number,
     errorCode: String,

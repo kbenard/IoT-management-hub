@@ -1,7 +1,2 @@
-- Services: Add history reporting to the DB
-- updateDevice: 
-    - Verify requirements about device config changes
-    - Implement mergeWith customizer to deal with sensors and indicators arrays
-- README.md: Finish document + Final Review
-- Double check all task requirements are completed
-- Deal with Jest open handles in unit testing
+- updateDevice: Implement mergeWith customizer to deal with sensors and indicators arrays
+- Implement HMAC Auth

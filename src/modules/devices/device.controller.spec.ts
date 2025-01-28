@@ -33,7 +33,9 @@ describe('DeviceController', () => {
         DeviceModule
       ],
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        AppService
+      ],
     }).compile();
 
     deviceController = app.get<DeviceController>(DeviceController);
@@ -43,7 +45,7 @@ describe('DeviceController', () => {
   describe('getDevice', () => {
     // Testing a successful getDevice() call
     it('should return "device1"', async () => {
-      let device: Device  = await deviceController.getDevice(device1.deviceId)
+      let device: Device  = await deviceController.getDevice({ path: "/device/id/device1", method: "GET", params: { id: "device1" } }, device1.deviceId, )
       expect(device.deviceId).toBe(device1.deviceId);
     }, 10 * SECONDS);
 
@@ -53,7 +55,7 @@ describe('DeviceController', () => {
           error;
 
       try {
-        device = await deviceController.getDevice("deviceShouldNotExist")
+        device = await deviceController.getDevice({ path: "/device/id/deviceShouldNotExist", method: "GET", params: { id: "deviceShouldNotExist" } }, "deviceShouldNotExist")
       } catch (e) {
         error = e;
       }
@@ -67,19 +69,30 @@ describe('DeviceController', () => {
   describe('listDevices', () => {
     // Testing listDevices() with no homeId narrowing, list of devices should contain deviceIds device1, device2 & device3
     it('should return 3', async () => {
-      let devices: Device[] = await deviceController.listDevices({})
+      let devices: Device[] = await deviceController.listDevices(
+        { path: "/device/list", method: "GET" }, 
+        {}
+      )
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(3);
     }, 10 * SECONDS);
 
     // Testing listDevices() with homeId home1 narrowing, list of devices should contain only device1 & device3
     it('should return 2', async () => {
-      let devices: Device[] = await deviceController.listDevices({}, "home1")
+      let devices: Device[] = await deviceController.listDevices(
+        { path: "/device/list/homeId/home1", method: "GET", params: { homeId: "home1" } }, 
+        {}, 
+        "home1"
+      )
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(2);
     }, 10 * SECONDS);
 
     // Testing listDevices() with a non existing homeId, should not return any devices
     it('should return 0', async () => {
-      let devices: Device[] = await deviceController.listDevices({}, "homeShouldNotExist")
+      let devices: Device[] = await deviceController.listDevices(
+        { path: "/device/list/homeId/homeShouldNotExist", method: "GET", params: { homeId: "homeShouldNotExist" }  }, 
+        {}, 
+        "homeShouldNotExist"
+      )
       expect(devices.length).toBe(0);
     }, 10 * SECONDS);
 
@@ -90,7 +103,10 @@ describe('DeviceController', () => {
 
       try {
         // Parameter values are string as coming from the querystring in real use case
-        devices = await deviceController.listDevices({ skip: "test" })
+        devices = await deviceController.listDevices(
+          { path: "/device/list", method: "GET", query: { skip: "test" } },
+          { skip: "test" }
+        )
       } catch (e) {
         error = e;
       }
@@ -106,7 +122,10 @@ describe('DeviceController', () => {
 
       try {
         // Parameter values are string as coming from the querystring in real use case
-        devices = await deviceController.listDevices({ limit: "test" })
+        devices = await deviceController.listDevices(
+          { path: "/device/list", method: "GET", query: { limit: "test" } },
+          { limit: "test" }
+        )
       } catch (e) {
         error = e;
       }
@@ -122,7 +141,10 @@ describe('DeviceController', () => {
 
       try {
         // Parameter values are string as coming from the querystring in real use case
-        devices = await deviceController.listDevices({ limit: "501" })
+        devices = await deviceController.listDevices(
+          { path: "/device/list", method: "GET", query: { limit: "501" } },
+          { limit: "501" }
+        )
       } catch (e) {
         error = e;
       }
@@ -140,12 +162,16 @@ describe('DeviceController', () => {
 
     // Testing a successful updateDevice() call on device1
     it('device1 should update with new lastUpdateReceived value', async () => {
-      const result = await deviceController.updateDevice(device1.deviceId, newDevice);
+      const result = await deviceController.updateDevice(
+        { path: "/device/id/device1", method: "PUT", params: { id: "device1" } },
+        device1.deviceId,
+        newDevice
+      );
 
       expect(result?.success).toBe(true);
       expect(result?.deviceId).toBe(device1.deviceId);
 
-      const updatedDevice = await deviceController.getDevice(device1.deviceId);
+      const updatedDevice = await deviceController.getDevice({ path: `/device/id/${device1.deviceId}`, method: "GET", params: { id: device1.deviceId }  }, device1.deviceId);
       expect(updatedDevice?.status?.lastUpdateReceived).toBe(now);
     }, 10 * SECONDS);
 
@@ -154,7 +180,11 @@ describe('DeviceController', () => {
       let error;
 
       try { 
-        const result = await deviceController.updateDevice("deviceShouldNotExist", newDevice);
+        const result = await deviceController.updateDevice(
+          { path: "/device/id/deviceShouldNotExist", method: "PUT", params: { id: "deviceShouldNotExist" } },
+          "deviceShouldNotExist",
+          newDevice
+        );
       } catch (e) {
         error = e;
       }
@@ -185,7 +215,11 @@ describe('DeviceController', () => {
       }
 
       try { 
-        const result = await deviceController.updateDevice(deviceDuplicateId, newDevice);
+        const result = await deviceController.updateDevice(
+          { path: `/device/id/${deviceDuplicateId}`, method: "PUT", params: { id: deviceDuplicateId } },
+          deviceDuplicateId,
+          newDevice
+        );
       } catch (e) {
         error = e;
       }
@@ -223,7 +257,11 @@ describe('DeviceController', () => {
       // Closing connection
       await mongoose.connection.close();
 
-      newDevice = await deviceController.registerDevice(deviceToRegister, newDeviceData);
+      newDevice = await deviceController.registerDevice(
+        { path: `/device/id/${deviceToRegister}`, method: "POST", params: { id: deviceToRegister } },
+        deviceToRegister,
+        newDeviceData
+      );
       expect(newDevice?.deviceId).toBe(deviceToRegister);
     }, 10 * SECONDS);
 
@@ -234,7 +272,11 @@ describe('DeviceController', () => {
           error;
           
       try {
-        newDevice = await deviceController.registerDevice(deviceToRegister, newDeviceData);
+        newDevice = await deviceController.registerDevice(
+          { path: `/device/id/${deviceToRegister}`, method: "POST", params: { id: deviceToRegister } },
+          deviceToRegister, 
+          newDeviceData
+        );
       } catch(e) {
         error = e
       }
@@ -248,7 +290,10 @@ describe('DeviceController', () => {
   describe('removeDevice', () => {
     // Testing a successful registerDevice() call
     it(`should remove device '${deviceToRegister}'`, async () => {
-      let result = await deviceController.removeDevice(deviceToRegister);
+      let result = await deviceController.removeDevice(
+        { path: `/device/id/${deviceToRegister}`, method: "DELETE", params: { id: deviceToRegister } },
+        deviceToRegister
+      );
       expect(result.success).toBe(true);
       expect(result.message).toBe(`Device '${deviceToRegister} succefully removed'`);
       expect(result.deviceId).toBe(deviceToRegister);
@@ -260,7 +305,9 @@ describe('DeviceController', () => {
           error;
           
       try {
-        result = await deviceController.removeDevice(deviceToRegister);
+        result = await deviceController.removeDevice(
+          { path: `/device/id/${deviceToRegister}`, method: "DELETE", params: { id: deviceToRegister } },
+          deviceToRegister);
       } catch(e) {
         error = e
       }

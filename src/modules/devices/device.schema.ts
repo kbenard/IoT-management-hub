@@ -108,3 +108,47 @@ export interface Device extends mongoose.Document {
     indicators: indicator[];
   };
 }
+
+export const StatusEventSchema = new mongoose.Schema({
+  device: String,
+  homeId: String,
+  status: String,
+  sensors: {},
+  timestamp: Date
+})
+
+export interface StatusEvent extends mongoose.Document {
+_id: string;
+device: string;
+homeId: string;
+status: string;
+sensors: {};
+timestamp: number;
+}
+
+export const RequestEventSchema = new mongoose.Schema({ 
+  calculatedPath: String,
+  path: String,
+  params: {},
+  query: {},
+  deviceId: String,
+  statusCode: Number,
+  status: String,
+  message: String,
+  success: Boolean,
+  timestamp: Date
+})
+
+export interface RequestEvent extends mongoose.Document {
+  _id: string;
+  calculatedPath: string,
+  path: string;
+  params: object,
+  query: object,
+  deviceId: string,
+  statusCode: number,
+  status: string,
+  message: String,
+  success: Boolean,
+  timestamp: Date
+}

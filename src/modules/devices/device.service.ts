@@ -9,6 +9,9 @@ import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Device } from './device.schema';
 import { DeviceDto, DeviceUpdateDto } from './device.dto';
 
+// Misc
+import lodash from 'lodash';
+
 // App Global Config
 const config = require('config');
 

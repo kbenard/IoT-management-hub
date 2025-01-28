@@ -4,5 +4,9 @@
         "password": "YOUR PASSWORD HERE",
         "clusterUrl": "iot-management-hub.ynzlm.mongodb.net",
         "database": "iot-management-hub"
+    },
+    "deviceSimulator": {
+        "active": true,
+        "intervalDelay": 60
     }
 }

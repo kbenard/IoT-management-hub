@@ -1,9 +1,9 @@
 // This script is meant to periodically simulate devices behaviour and status updates towards the backend
 // The script also Inserts some variance for monitoring graph purposes
  
-
 // Schemas
 import { DeviceSchema } from "./modules/devices/device.schema";
+import { statusEventSchema } from "./modules/events/events.schema";
 
 // Config
 const config = require('config');
@@ -19,16 +19,12 @@ export async function DeviceSimulator() {
     console.log("DeviceSimulator - Init");
     await mongoose.connect(mongoDBUri);
     const DeviceModel = mongoose.model('Device', DeviceSchema);
-    const StatusModel = mongoose.model('Status', new mongoose.Schema({ 
-        device: String,
-        homeId: String,
-        status: String,
-        sensors: {},
-        timestamp: Date
-    }));
+    const StatusEventModel = mongoose.model('Status', statusEventSchema);
 
     // In case I need to reset the collection content
-    // await StatusModel.deleteMany({});
+    if(config?.deviceSimulator?.resetEventsAtRestart) {
+        await StatusEventModel.deleteMany({});
+    }
 
     const intervalID = setInterval(async function () {
         let devices = (await DeviceModel.find({}));
@@ -68,7 +64,7 @@ export async function DeviceSimulator() {
         });
 
         // console.log("Status Updates: ", JSON.stringify(statusUpdates[0], null, 2));
-        let readings = await StatusModel.insertMany(statusUpdates);
-        // console.log("Interval - Devices: ", new Date(), readings.map(r => r.device));
-    }, 60 * SECONDS);
+        let readings = await StatusEventModel.insertMany(statusUpdates);
+        console.log(`Device Simulator - Interval - ${new Date()}`, readings.map(r => r.device).join(", "));
+    }, (config?.deviceSimulator?.intervalDelayInSeconds || 60) * SECONDS);
 }

@@ -1,4 +1,4 @@
 - updateDevice: Verify requirements about device config changes
-- updateDevice: Data loss?
+- updateDevice: Data loss? Merge with document? lodash mergeWith?
 - README.md: Finish document + Final Review
 - Double check all task requirements are completed

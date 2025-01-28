@@ -1,1 +1,2 @@
 - updateDevice: Implement mergeWith customizer to deal with sensors and indicators arrays
+- Implement HMAC Auth

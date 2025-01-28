@@ -95,3 +95,6 @@ $ npm run start:dev
 ```bash
 # unit tests
 $ npm run test
+```
+
+A bash script containing test CURL requests can also be found [here](scripts/api-query-examples.sh) to test all routes and HTTP Methods with most use cases covered.

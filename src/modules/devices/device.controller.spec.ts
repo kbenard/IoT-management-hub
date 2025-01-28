@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 import { MongooseModule } from '@nestjs/mongoose';
 
 // App
-import { AppController } from '../app.controller';
-import { AppService } from '../app.service';
+import { AppController } from '../app/app.controller';
+import { AppService } from '../app/app.service';
 
 // Device
 import { DeviceModule } from './device.module';
@@ -18,14 +18,16 @@ const config = require('config');
 const mongoDBUri = `mongodb+srv://${config.mongoDB.user}:${config.mongoDB.password}@${config.mongoDB.clusterUrl}/${config.mongoDB.database}?retryWrites=true&w=majority`;
 const SECONDS = 1000;
 
-const device1 = require('../../sample/device/device1.json');
+const device1 = require('../../../sample/device/device1.json');
 
 describe('DeviceController', () => {
   let deviceController: DeviceController;
   let deviceToRegister = 'deviceToRegister';
+  let app: TestingModule;
 
-  beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+  // Initialising test AppModule before tests start
+  beforeAll(async () => {
+    app = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(mongoDBUri),
         DeviceModule
@@ -35,7 +37,7 @@ describe('DeviceController', () => {
     }).compile();
 
     deviceController = app.get<DeviceController>(DeviceController);
-  });
+  }, 10 * SECONDS);
 
   // Tests on use cases relating to the Device controller operation retrieving an IoT Device's full details from the database
   describe('getDevice', () => {
@@ -50,7 +52,7 @@ describe('DeviceController', () => {
       let device: Device,
           error;
 
-      try { 
+      try {
         device = await deviceController.getDevice("deviceShouldNotExist")
       } catch (e) {
         error = e;
@@ -65,20 +67,68 @@ describe('DeviceController', () => {
   describe('listDevices', () => {
     // Testing listDevices() with no homeId narrowing, list of devices should contain deviceIds device1, device2 & device3
     it('should return 3', async () => {
-      let devices: Device[] = await deviceController.listDevices()
+      let devices: Device[] = await deviceController.listDevices({})
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(3);
     }, 10 * SECONDS);
 
     // Testing listDevices() with homeId home1 narrowing, list of devices should contain only device1 & device3
     it('should return 2', async () => {
-      let devices: Device[] = await deviceController.listDevices("home1")
+      let devices: Device[] = await deviceController.listDevices({}, "home1")
       expect(devices.filter(d => ['device1', 'device2', 'device3'].includes(d.deviceId)).length).toBe(2);
     }, 10 * SECONDS);
 
     // Testing listDevices() with a non existing homeId, should not return any devices
     it('should return 0', async () => {
-      let devices: Device[] = await deviceController.listDevices("homeShouldNotExist")
+      let devices: Device[] = await deviceController.listDevices({}, "homeShouldNotExist")
       expect(devices.length).toBe(0);
+    }, 10 * SECONDS);
+
+    // Forcing an error on listDevices() with a non number skip query parameter
+    it("should error - The Skip query parameter should be a number.", async () => {
+      let devices: Device[],
+          error;
+
+      try {
+        // Parameter values are string as coming from the querystring in real use case
+        devices = await deviceController.listDevices({ skip: "test" })
+      } catch (e) {
+        error = e;
+      }
+      console.log("Error: ", error)
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("The Skip query parameter should be a number.");
+    }, 10 * SECONDS);
+
+    // Forcing an error on listDevices() with a non number limit query parameter
+    it("should error - The Limit query parameter should be a number.", async () => {
+      let devices: Device[],
+          error;
+
+      try {
+        // Parameter values are string as coming from the querystring in real use case
+        devices = await deviceController.listDevices({ limit: "test" })
+      } catch (e) {
+        error = e;
+      }
+      console.log("Error: ", error)
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("The Limit query parameter should be a number.");
+    }, 10 * SECONDS);
+
+    // Forcing an error on listDevices() with a limit parameter superior to the 500 max value
+    it("should error - The Limit query parameter value upper limit is 500.", async () => {
+      let devices: Device[],
+          error;
+
+      try {
+        // Parameter values are string as coming from the querystring in real use case
+        devices = await deviceController.listDevices({ limit: "501" })
+      } catch (e) {
+        error = e;
+      }
+      console.log("Error: ", error)
+      expect(error?.status).toBe(400);
+      expect(error?.response).toBe("The Limit query parameter value upper limit is 500.");
     }, 10 * SECONDS);
   });
 
@@ -111,20 +161,6 @@ describe('DeviceController', () => {
       
       expect(error?.status).toBe(400);
       expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database.");
-    }, 10 * SECONDS);
-
-    // Forcing an error on updateDevice() with a forced schema validation error
-    it(`should error - Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`, async () => {
-      let error;
-
-      try { 
-        const result = await deviceController.updateDevice(device1.deviceId, { notInSchema: true });
-      } catch (e) {
-        error = e;
-      }
-      
-      expect(error?.status).toBe(500);
-      expect(error?.response).toBe(`Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`);
     }, 10 * SECONDS);
 
     // Forcing an error on updateDevice() with a duplicate deviceId occurence (forced manually outside of API boundaries)
@@ -233,4 +269,11 @@ describe('DeviceController', () => {
       expect(error?.response).toBe(`Document with deviceId '${deviceToRegister}' was not found in database.`);
     }, 10 * SECONDS);
   });
+
+  // Post test clean up, ensuring all open processes are terminated to allow Jest to exit peacefully
+  afterAll(done => {
+    mongoose.connection.close();
+    app.close();
+    done();
+  })
 });

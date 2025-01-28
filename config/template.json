@@ -2,12 +2,12 @@
     "mongoDB": {
         "user": "YOUR USER NAME HERE",
         "password": "YOUR PASSWORD HERE",
-        "clusterUrl": "YOUR CLUSTER URL HERE",
+        "clusterUrl": "iot-management-hub.ynzlm.mongodb.net",
         "database": "iot-management-hub"
     },
-    "influxDB": {
-        "host": "https://eu-central-1-1.aws.cloud2.influxdata.com",
-        "database": "iot-management-hub-v1",
-        "token": "YOUR API TOKEN HERE"
+    "deviceSimulator": {
+        "active": true,
+        "intervalDelay": 60,
+        "resetEventsAtRestart": false
     }
 }

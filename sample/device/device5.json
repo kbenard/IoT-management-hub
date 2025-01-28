@@ -1,9 +1,9 @@
 {
-    "deviceId": "device2",
+    "deviceId": "device5",
     "type": "EnvironmentalSensor",
     "status": {
         "code": "WARNING_MOULD",
-        "lastUpdateReceived": 1737844444,
+        "lastUpdateReceived": 1737855555,
         "message": "Action Required: High Mould Levels Detected",
         "power": {
             "network": {
@@ -26,9 +26,9 @@
         }
     },
     "geodata": {
-        "homeId": "home2",
-        "placement": "Bathroom",
-        "IP": "100.0.0.2"
+        "homeId": "home3",
+        "placement": "Kitchen",
+        "IP": "100.0.0.3"
     },
     "metadata": {
         "sensors": [
@@ -36,25 +36,25 @@
                 "id": "condensation",
                 "metric": "Humidity Levels",
                 "unit": "percentage",
-                "value": 65
+                "value": 80
             },
             {
                 "id": "damp",
                 "metric": "Moisture Levels",
                 "unit": "percentage",
-                "value": 24
+                "value": 30
             },
             {
                 "id": "temperature",
                 "metric": "Temperature",
                 "unit": "celsius",
-                "value": 23
+                "value": 16
             },
             {
                 "id": "CO2",
                 "metric": "Co2 Concentration Levels",
                 "unit": "ppm",
-                "value": 400
+                "value": 200
             }
         ],
         "indicators": []

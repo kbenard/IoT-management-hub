@@ -89,8 +89,9 @@ export interface Device extends mongoose.Document {
     }
   };
   device: {
-    referenceModel: string;
-    manufacturerId: string;
+    model: string;
+    name: string;
+    manufacturer: string;
     ean: number;
     firmware: {
       name: string;
@@ -98,7 +99,7 @@ export interface Device extends mongoose.Document {
     };
   };
   geodata: {
-    id: string;
+    homeId: string;
     placement: string;
     IP: string;
   };

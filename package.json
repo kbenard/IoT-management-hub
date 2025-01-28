@@ -1,8 +1,8 @@
 {
   "name": "iot-management-hub",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Backend system acting as central hub for managing IoT devices in a smart home environment",
-  "private": true,
+  "private": false,
   "keywords": [
     "IoT",
     "SmartHome",
@@ -15,7 +15,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "NODE_ENV=dev nest start",
     "start:dev": "NODE_ENV=dev nest start --watch",
     "start:debug": "NODE_ENV=dev nest start --debug --watch",
     "start:prod": "NODE_ENV=prod node dist/main",
@@ -24,18 +24,18 @@
     "test:watch": "NODE_ENV=dev jest --watch",
     "test:cov": "NODE_ENV=dev jest --coverage",
     "test:debug": "NODE_ENV=dev node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "NODE_ENV=dev jest --config ./test/jest-e2e.json",
-    "influxdb:test": "NODE_ENV=dev node scripts/influxdb-test.mjs"
+    "test:e2e": "NODE_ENV=dev jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@influxdata/influxdb3-client": "^1.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/mongoose": "^11.0.0",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "config": "^3.3.12",
+    "lodash": "^4.17.21",
     "mongodb": "^6.12.0",
     "mongoose": "^8.9.5",
     "reflect-metadata": "^0.2.2",

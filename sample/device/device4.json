@@ -1,9 +1,9 @@
 {
-    "deviceId": "device1",
+    "deviceId": "device4",
     "type": "FireAlarm",
     "status": {
         "code": "OK",
-        "lastUpdateReceived": 1737828494,
+        "lastUpdateReceived": 1737444444,
         "message": "No problem detected",
         "power": {
             "network": {
@@ -26,9 +26,9 @@
         }
     },
     "geodata": {
-        "homeId": "home1",
+        "homeId": "home3",
         "placement": "Bedroom",
-        "IP": "100.0.0.1"
+        "IP": "100.0.0.3"
     },
     "metadata": {
         "sensors": [
@@ -36,13 +36,13 @@
                 "id": "optical",
                 "metric": "Optical Density Per Meter",
                 "unit": "OD/m",
-                "value": 0.05
+                "value": 0.09
             },
             {
                 "id": "thermistor",
                 "metric": "Temperature",
                 "unit": "celsius",
-                "value": 20
+                "value": 22
             }
         ],
         "indicators": [

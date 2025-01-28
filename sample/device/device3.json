@@ -3,7 +3,7 @@
     "type": "FireAlarm",
     "status": {
         "code": "NO_NETWORK",
-        "lastUpdateReceived": "1737811111",
+        "lastUpdateReceived": 1737811111,
         "message": "Disconnected from electrical network",
         "power": {
             "network": {
@@ -19,7 +19,7 @@
         "model": "Ei3024",
         "name": "Ei3024 Multi-Sensor Fire Alarm",
         "manufacturer": "Aico",
-        "ean": 5099383006537,
+        "ean": "5099383006537",
         "firmware": {
             "name": "AudioLINK+",
             "version": "2.1.15"

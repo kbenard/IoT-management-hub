@@ -1,9 +1,17 @@
+// NestJS
 import { Module } from '@nestjs/common';
 import { DeviceController } from './device.controller';
 import { DeviceService } from './device.service';
 
+// MongoDB
 import { MongooseModule } from '@nestjs/mongoose';
 import { DeviceSchema } from './device.schema';
+
+// Device Behaviour Simulation Routine
+import { DeviceSimulator } from '../../device-simulator';
+
+// Config
+const config = require('config');
 
 @Module({
   imports: [
@@ -13,3 +21,8 @@ import { DeviceSchema } from './device.schema';
   providers: [DeviceService],
 })
 export class DeviceModule {}
+
+console.log("DeviceSimulator - Active?", config?.deviceSimulator?.active)
+if(config?.deviceSimulator?.active) {
+  DeviceSimulator();
+}

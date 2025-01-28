@@ -27,7 +27,7 @@ lastUpdateReceived="{ \"status\": { \"code\": \"WARNING_SMOKE\", \"lastUpdateRec
     curl --request PUT -H "Content-Type: application/json" --data "${lastUpdateReceived}" http://localhost:3000/device/id/device1
 curl -XGET http://localhost:3000/device/id/device1 # To confirm change
 
-# Error 500 - Should be blocked by DTO Validation Pipe, need to investigate. At least still blocked by Schema definition
+# Error 500 - Should be blocked by DTO Validation Pipe, need to investigate. 
 curl -XPUT -H "Content-Type: application/json"  --data '{ "notInSchema": true }' http://localhost:3000/device/id/device1
 
 # Error 400 - Invalid Type - status.code must be a string

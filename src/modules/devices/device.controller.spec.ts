@@ -163,26 +163,6 @@ describe('DeviceController', () => {
       expect(error?.response).toBe("Document with deviceId 'deviceShouldNotExist' was not found in database.");
     }, 10 * SECONDS);
 
-    // Forcing an error on updateDevice() with a forced schema validation error 
-    it(`should error - Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`, async () => {
-      let error;
-
-      try { 
-        await deviceController.updateDevice(device1.deviceId, {});
-        // Flagged as non valid in VS Code now that PartialType DTOs are in place for device update
-        // await deviceController.updateDevice(device1.deviceId, { notInSchema: true });
-        // await deviceController.updateDevice(device1.deviceId, { status: { notInSchema: true } });
-        // await deviceController.updateDevice(device1.deviceId, { device: { notInSchema: true } });
-        // await deviceController.updateDevice(device1.deviceId, { geodata: { notInSchema: true } });
-        // await deviceController.updateDevice(device1.deviceId, { metadata: { notInSchema: true } });
-      } catch (e) {
-        error = e;
-      }
-      
-      expect(error?.status).toBe(500);
-      expect(error?.response).toBe(`Database Error: Update success for document with deviceId '${device1.deviceId}' was not acknowledged by the database.`);
-    }, 10 * SECONDS);
-
     // Forcing an error on updateDevice() with a duplicate deviceId occurence (forced manually outside of API boundaries)
     it(`should error - Database Error: Too many documents with deviceId '${deviceDuplicateId}' were matched in the database for this update request. Cannot resolve device.`, async () => {
       let error;

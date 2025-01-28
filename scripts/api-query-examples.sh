@@ -22,8 +22,8 @@ curl -XGET http://localhost:3000/device/list?skip=string
 curl -XGET http://localhost:3000/device/list?limit=501
 
 # updateDevice
-# Success - Update device1 - status.lastUpdateReceived
-lastUpdateReceived="{ \"status\": { \"lastUpdateReceived\": $(date +%s) } }""" && echo "${lastUpdateReceived}" && \
+# Success - Update device1 - status.lastUpdateReceived - status.code
+lastUpdateReceived="{ \"status\": { \"code\": \"WARNING_SMOKE\", \"lastUpdateReceived\": $(date +%s) } }""" && echo "${lastUpdateReceived}" && \
     curl --request PUT -H "Content-Type: application/json" --data "${lastUpdateReceived}" http://localhost:3000/device/id/device1
 curl -XGET http://localhost:3000/device/id/device1 # To confirm change
 

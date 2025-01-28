@@ -10,7 +10,7 @@ import { Device } from './device.schema';
 import { DeviceDto, DeviceUpdateDto } from './device.dto';
 
 // Misc
-import lodash from 'lodash';
+const _ = require('lodash');
 
 // App Global Config
 const config = require('config');
@@ -37,8 +37,6 @@ export class DeviceService {
 
   // Retrieves list of summarized device documents
   // When a homeId is supplied, the query narrows the search down to the supplied id, otherwise all documents are retrieved
-  // TODO: Implement pagination
-  // TODO: Implement error handling?
   async findAll(options: any = {}, homeId?: string): Promise<Device[]> {
     let devices,
         query = homeId ? { 'geodata.homeId': homeId } : {},
@@ -62,24 +60,36 @@ export class DeviceService {
   /*    PUT/PATCH SERVICES    */
   // Updates an existing device document with the supplied information
   async update(deviceId: string, updateDevice: DeviceUpdateDto): Promise<any> {
+    let device = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
     const documentCount = await this.deviceModel.countDocuments({ deviceId });
+    let newDevice;
 
-    if (documentCount === 0) {
+    if (!device || !('deviceId' in device)) {
       throw new HttpException(`Document with deviceId '${deviceId}' was not found in database.`, HttpStatus.BAD_REQUEST);
+    } else {
+      console.log("Merge!")
+      // Merging current doc and changes into new device Document
+      // TODO, implement _.mergeWith with customizer for sensors and indicators array merging
+      newDevice = _.merge({}, _.cloneDeep(device), updateDevice)
+      delete newDevice._id;
     }
 
     if(documentCount > 1) {
       throw new HttpException(`Database Error: Too many documents with deviceId '${deviceId}' were matched in the database for this update request. Cannot resolve device.`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    const res = await this.deviceModel.updateOne({ deviceId: deviceId }, updateDevice);
-    
-    if(!res.acknowledged) {
-      throw new HttpException(`Database Error: Update success for document with deviceId '${deviceId}' was not acknowledged by the database.`, HttpStatus.INTERNAL_SERVER_ERROR);
+    console.log("New Device", JSON.stringify(updateDevice, null, 2), newDevice._id, JSON.stringify(newDevice, null, 2));
+    const res = await this.deviceModel.findByIdAndUpdate(device._id, newDevice);
+
+    let updatedDevice = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();
+    console.log("updatedDevice: ", JSON.stringify(updatedDevice?.status, null, 2));
+
+    if(!res) {
+      throw new HttpException(`Database Error: Document with deviceId '${deviceId}' was not updated in the database.`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     return {
-       success: res.acknowledged,
+       success: true,
        deviceId: deviceId
     };
   }

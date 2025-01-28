@@ -74,6 +74,11 @@ In order to run locally, a `config/dev.json` file needs to be built from the tem
 A markdown documentation page is available for the Device API controller:
 - [Device API](documentation/Device/index.md)
 
+## Monitoring
+
+A basic monitoring dashboard for Device history has been setup though MongoDB Atlas, it can be accessed on request.
+An old sample in PDF format can also be found in this repository [here](documentation/Monitoring/monitoring-report-example.pdf)
+
 ## Compile and run the project
 
 ```bash

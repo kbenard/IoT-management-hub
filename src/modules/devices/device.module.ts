@@ -22,7 +22,6 @@ const config = require('config');
 })
 export class DeviceModule {}
 
-console.log("DeviceSimulator - Active?", config?.deviceSimulator?.active)
 if(config?.deviceSimulator?.active) {
   DeviceSimulator();
 }

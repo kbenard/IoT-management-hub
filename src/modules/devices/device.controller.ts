@@ -1,7 +1,7 @@
 import { 
   Controller, HttpException, HttpStatus,
   Param, Query, Body,
-  Get, Put, Patch, Post, Delete
+  Get, Put, Post, Delete
 } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { Device } from './device.schema';
@@ -19,7 +19,7 @@ export class DeviceController {
   @Get('id/:deviceId')
   // Retrieves all device information, based on deviceId
   async getDevice(@Param('deviceId') deviceId: string): Promise<Device> {
-    console.log(`device - getDevice - ${deviceId}`);
+    console.log(`device - getDevice - ${deviceId}`, this, this?.deviceService);
     let device = await this.deviceService.findOne(deviceId);
     return device
   }

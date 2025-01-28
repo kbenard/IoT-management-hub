@@ -67,7 +67,6 @@ export class DeviceService {
     if (!device || !('deviceId' in device)) {
       throw new HttpException(`Document with deviceId '${deviceId}' was not found in database.`, HttpStatus.BAD_REQUEST);
     } else {
-      console.log("Merge!")
       // Merging current doc and changes into new device Document
       // TODO, implement _.mergeWith with customizer for sensors and indicators array merging
       newDevice = _.merge({}, _.cloneDeep(device), updateDevice)

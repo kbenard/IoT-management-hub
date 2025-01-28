@@ -1,4 +1,5 @@
-- updateDevice: Verify requirements about device config changes
-- updateDevice: Data loss? Merge with document? lodash mergeWith?
+- updateDevice: 
+    - Verify requirements about device config changes
+    - Implement mergeWith customizer to deal with sensors and indicators arrays
 - README.md: Finish document + Final Review
 - Double check all task requirements are completed

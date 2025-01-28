@@ -120,6 +120,31 @@ export class DeviceService {
       throw new HttpException(errorMessages[1], HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // Function to simulate sending update request to Device hardware, always send mock success
+    async function sendMockUpdateToDevice(deviceId, update) {
+      return {
+        success: true,
+        deviceId: deviceId
+      }
+    }
+
+    let updateDone = await sendMockUpdateToDevice(deviceId, updateDevice)
+
+    if(!updateDone?.success) {
+      await this.requestEventModel.create({
+        calculatedPath: "/" + request.method + " " + request.path,
+        path: request.path,
+        params: request.params,
+        query: request.query,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: "DEVICE_UPDATE_HARDWARE_FAILURE",
+        message: `Hardware for Device ${deviceId} could not be updated.`,
+        success: false,
+        timestamp: new Date()
+      });
+      throw new HttpException(errorMessages[2], HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     const res = await this.deviceModel.findByIdAndUpdate(device._id, newDevice);
 
     let updatedDevice = await this.deviceModel.findOne({ deviceId: deviceId }).lean().exec();

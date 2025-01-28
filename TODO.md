@@ -1,4 +1,3 @@
-- Services: Add history reporting to the DB
 - updateDevice: 
     - Verify requirements about device config changes
     - Implement mergeWith customizer to deal with sensors and indicators arrays

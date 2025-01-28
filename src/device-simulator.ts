@@ -2,8 +2,7 @@
 // The script also Inserts some variance for monitoring graph purposes
  
 // Schemas
-import { DeviceSchema } from "./modules/devices/device.schema";
-import { statusEventSchema } from "./modules/events/events.schema";
+import { DeviceSchema, StatusEventSchema } from "./modules/devices/device.schema";
 
 // Config
 const config = require('config');
@@ -19,7 +18,7 @@ export async function DeviceSimulator() {
     console.log("DeviceSimulator - Init");
     await mongoose.connect(mongoDBUri);
     const DeviceModel = mongoose.model('Device', DeviceSchema);
-    const StatusEventModel = mongoose.model('Status', statusEventSchema);
+    const StatusEventModel = mongoose.model('Status', StatusEventSchema);
 
     // In case I need to reset the collection content
     if(config?.deviceSimulator?.resetEventsAtRestart) {

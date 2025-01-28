@@ -49,21 +49,59 @@ export class DeviceController {
   // Can be narrowed down to device belonging to a specific homeId, if not, retrieve for all devices
   @Get('list{/homeId/:homeId}')
   async listDevices(@Req() request, @Query() query: any, @Param('homeId') homeId?: string, ) {
+    let errorMessages = [
+      `The Skip query parameter should be a number.`,
+      `The Limit query parameter should be a number.`,
+      `The Limit query parameter value upper limit is 500.`
+    ]
     console.log(`device - listDevices - ${homeId || "All"}`, query);
     if(query.skip) {
       if(isNaN(query.skip)) {
-        throw new HttpException(`The Skip query parameter should be a number.`, HttpStatus.BAD_REQUEST);
+        await this.requestEventModel.create({
+          calculatedPath: "/" + request.method + " " + request.path,
+          path: request.path,
+          params: request.params,
+          query: request.query,
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: "INVALID_QUERY_PARAMETER",
+          message: errorMessages[0],
+          success: false,
+          timestamp: new Date()
+        });
+        throw new HttpException(errorMessages[0], HttpStatus.BAD_REQUEST);
       }
       query.skip = Number(query.skip);
     } 
 
     if(query.limit) {
       if(isNaN(query.limit)) {
-        throw new HttpException(`The Limit query parameter should be a number.`, HttpStatus.BAD_REQUEST);
+        await this.requestEventModel.create({
+          calculatedPath: "/" + request.method + " " + request.path,
+          path: request.path,
+          params: request.params,
+          query: request.query,
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: "INVALID_QUERY_PARAMETER",
+          message: errorMessages[1],
+          success: false,
+          timestamp: new Date()
+        });
+        throw new HttpException(errorMessages[1], HttpStatus.BAD_REQUEST);
       }
       query.limit = Number(query.limit);
       if(query.limit > 500) {
-        throw new HttpException(`The Limit query parameter value upper limit is 500.`, HttpStatus.BAD_REQUEST);
+        await this.requestEventModel.create({
+          calculatedPath: "/" + request.method + " " + request.path,
+          path: request.path,
+          params: request.params,
+          query: request.query,
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: "INVALID_QUERY_PARAMETER",
+          message: errorMessages[2],
+          success: false,
+          timestamp: new Date()
+        });
+        throw new HttpException(errorMessages[2], HttpStatus.BAD_REQUEST);
       }
     }
 

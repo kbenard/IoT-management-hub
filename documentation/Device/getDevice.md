@@ -10,7 +10,7 @@ Retrieves the full details of the requested deviceId. Returns the matched databa
 
 **Permissions required** : None
 
-**Example** : http://localhost:3000/device/id/device1
+**Example URL** : http://localhost:3000/device/id/device1
 
 ## Success Response
 

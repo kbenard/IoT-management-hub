@@ -14,7 +14,7 @@ Query parameters can also be used to paginate the search:
 
 **Permissions required** : None
 
-**Examples** : 
+**Example URLs** : 
 - http://localhost:3000/device/list/
 - http://localhost:3000/device/list/homeId/home1
 

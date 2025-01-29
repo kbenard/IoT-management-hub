@@ -10,6 +10,8 @@ Deletes the requested deviceId document from the database. Returns a success con
 
 **Permissions required** : None
 
+**Example URL** : http://localhost:3000/device/id/device1
+
 ## Success Response
 
 **Code** : `200 OK`

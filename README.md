@@ -83,6 +83,8 @@ The dashboard can be also be shared on MongoDB Atlas on request to see how the g
 
 ## Compile and run the project
 
+The project runs on port 3000 by default and can be accessed on the following endpoint locally `http://localhost:3000/`
+
 ```bash
 # development
 $ npm run start

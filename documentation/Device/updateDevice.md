@@ -10,6 +10,8 @@ Updates the Device state and config in the Database with the supplied body objec
 
 **Permissions required** : None
 
+**Example URL** : http://localhost:3000/device/id/device1
+
 ## Success Response
 
 **Code** : `200 OK`

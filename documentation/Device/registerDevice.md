@@ -10,7 +10,7 @@ Registers a deviceId in the database with the structure supplied in the request 
 
 **Permissions required** : None
 
-**Example** : http://localhost:3000/device/id/device1
+**Example URL** : http://localhost:3000/device/id/device1
 
 ## Success Response
 
